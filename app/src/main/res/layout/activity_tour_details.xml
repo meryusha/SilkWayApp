@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <include
+        layout="@layout/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <silkway.merey.silkwayapp.classes.VerticalScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:paddingBottom="5dp"
+                android:paddingLeft="5dp"
+                android:paddingRight="5dp"
+                android:paddingTop="5dp">
+
+                <include
+                    layout="@layout/view_pager_images"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+
+                <include
+                    layout="@layout/tour_details"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+
+                <include
+                    layout="@layout/timetable_viewpager"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+
+                <Button
+                    android:id="@+id/toogleButtonStats"
+                    style="@style/buttonExpandable"
+                    android:background="@color/transparent"
+                    android:drawableRight="@drawable/ic_keyboard_arrow_left_black_24dp"
+                    android:onClick="onClickToogleStats"
+                    android:text="Cтатистика" />
+
+                <com.github.aakira.expandablelayout.ExpandableRelativeLayout
+                    android:id="@+id/expandableLayoutStatistics"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    app:ael_duration="500"
+                    app:ael_expanded="false"
+                    app:ael_interpolator="bounce"
+                    app:ael_orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/statsTextView"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="sample"
+                        android:textSize="20sp" />
+                </com.github.aakira.expandablelayout.ExpandableRelativeLayout>
+
+                <Button
+                    android:id="@+id/toogleButtonSched"
+                    style="@style/buttonExpandable"
+                    android:background="@color/transparent"
+                    android:drawableRight="@drawable/ic_keyboard_arrow_left_black_24dp"
+                    android:onClick="onClickToogleSched"
+                    android:text="Расписание" />
+
+                <com.github.aakira.expandablelayout.ExpandableRelativeLayout
+                    android:id="@+id/expandableLayoutSchedule"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    app:ael_duration="500"
+                    app:ael_expanded="false"
+                    app:ael_interpolator="bounce"
+                    app:ael_orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/scheduleTextView"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="sample"
+                        android:textSize="20sp" />
+                </com.github.aakira.expandablelayout.ExpandableRelativeLayout>
+
+                <Button
+                    android:id="@+id/toogleButtonOffers"
+                    style="@style/buttonExpandable"
+                    android:background="@color/transparent"
+                    android:drawableRight="@drawable/ic_keyboard_arrow_left_black_24dp"
+                    android:onClick="onClickToogleOffers"
+                    android:text="Предложения" />
+
+                <com.github.aakira.expandablelayout.ExpandableRelativeLayout
+                    android:id="@+id/expandableLayoutOffers"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    app:ael_duration="500"
+                    app:ael_expanded="false"
+                    app:ael_interpolator="bounce"
+                    app:ael_orientation="vertical">
+
+                    <ListView
+                        android:id="@+id/offersListView"
+                        android:layout_width="match_parent"
+                        android:layout_height="300dp"
+                        android:nestedScrollingEnabled="true" />
+                </com.github.aakira.expandablelayout.ExpandableRelativeLayout>
+
+                <View
+                    android:layout_width="wrap_content"
+                    android:layout_height="5dp"></View>
+            </LinearLayout>
+        </LinearLayout>
+    </silkway.merey.silkwayapp.classes.VerticalScrollView>
+
+
+</LinearLayout>
