@@ -20,8 +20,7 @@
 
         <TextView
             android:id="@+id/textView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            style="@style/textStyle"
             android:layout_alignParentTop="true"
             android:layout_marginLeft="20dp"
             android:layout_marginRight="20dp"
@@ -30,8 +29,8 @@
             android:overScrollMode="always"
             android:scrollbarStyle="insideInset"
             android:scrollbars="vertical"
-            android:text="cdfcddcfdvdv"
+            android:text=""
             android:textAlignment="center"
-            android:textSize="40sp" />
+            android:textSize="20sp" />
     </LinearLayout>
 </FrameLayout>

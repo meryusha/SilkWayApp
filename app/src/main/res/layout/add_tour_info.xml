@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <TextView
+        style="@style/largeHeadingsTextStyle"
+        android:layout_marginBottom="10dp"
+        android:text="Информация"
+        android:textAlignment="center" />
+
+    <TextView
+        style="@style/textStyle"
+        android:text="Название тура" />
+
+    <EditText
+        android:id="@+id/tourNameEditText"
+        style="@style/editTextStyle"
+        android:hint="Введите название тура" />
+
+    <TextView
+        style="@style/textStyle"
+        android:text="Описание" />
+
+    <EditText
+        android:id="@+id/tourDescriptionEditText"
+        style="@style/editTextStyle"
+        android:hint="Введите описание" />
+
+    <TextView
+        style="@style/textStyle"
+        android:text="Цена" />
+
+    <EditText
+        android:id="@+id/tourPriceEditText"
+        style="@style/editTextStyle"
+        android:hint="Введите цену" />
+
+    <TextView
+        style="@style/textStyle"
+        android:text="Сезоны" />
+
+    <EditText
+        android:id="@+id/tourLocationTextView"
+        style="@style/editTextStyle"
+        android:hint="Введите сезонность тура" />
+
+    <TextView
+        style="@style/textStyle"
+        android:text="Количество людей" />
+
+    <EditText
+        android:id="@+id/tourNumberPeopleTextView"
+        style="@style/editTextStyle"
+        android:hint="Введите количество людей" />
+
+    <TextView
+        style="@style/textStyle"
+        android:text="Длительность" />
+
+    <EditText
+        android:id="@+id/tourDurationEditText"
+        style="@style/editTextStyle"
+        android:hint="Введите продолжительность тура" />
+
+    <TextView
+        style="@style/textStyle"
+        android:text="Требования" />
+
+    <EditText
+        android:id="@+id/tourRequirementsEditText"
+        style="@style/editTextStyle"
+        android:hint="Введите требования для тура" />
+</LinearLayout>

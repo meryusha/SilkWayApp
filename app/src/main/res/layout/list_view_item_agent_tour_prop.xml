@@ -1,14 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="60dp"
+    android:layout_height="120dp"
     android:orientation="horizontal">
 
     <ImageView
         android:id="@+id/imageView"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
         android:layout_margin="5dp"
+        android:scaleType="centerCrop"
         android:src="@drawable/nature" />
 
     <RelativeLayout
@@ -18,17 +19,15 @@
 
         <TextView
             android:id="@+id/changedTagTextView"
+            style="@style/textStyle"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
-            android:text="changed" />
+            android:text="изменено" />
 
         <TextView
             android:id="@+id/textView"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            style="@style/textStyle"
             android:layout_below="@+id/changedTagTextView"
-
-            android:text="Here goes some text" />
+            android:text="всвсв" />
     </RelativeLayout>
 </LinearLayout>

@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.github.aakira.expandablelayout.ExpandableLayoutListenerAdapter;
 import com.github.aakira.expandablelayout.ExpandableRelativeLayout;
@@ -119,8 +120,11 @@ public class AgentOfferActivity extends AppCompatActivity {
     private void setToolbar() {
 
         toolbar = (Toolbar) findViewById(R.id.toolbar);
+        TextView toolbarTextView = (TextView) toolbar.findViewById(R.id.toolbar_title);
+        toolbarTextView.setText("Предложение");
         setSupportActionBar(toolbar);
         if (getSupportActionBar() != null) {
+            getSupportActionBar().setDisplayShowTitleEnabled(false);
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         }
     }

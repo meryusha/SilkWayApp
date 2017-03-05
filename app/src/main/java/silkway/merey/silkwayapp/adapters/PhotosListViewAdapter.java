@@ -12,8 +12,6 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.bumptech.glide.Glide;
-
 import java.util.List;
 
 import silkway.merey.silkwayapp.R;
@@ -53,7 +51,7 @@ public class PhotosListViewAdapter extends BaseAdapter {
     public View getView(int position, View convertView, ViewGroup parent) {
         ViewHolder viewHolder = null;
         if (convertView == null) {
-            convertView = layoutInflater.inflate(R.layout.agent_tour_prop_list_view_item, null);
+            convertView = layoutInflater.inflate(R.layout.list_view_item_agent_tour_prop, null);
             viewHolder = new ViewHolder(convertView);
             convertView.setTag(viewHolder);
         } else {

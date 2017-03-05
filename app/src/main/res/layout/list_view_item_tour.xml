@@ -31,12 +31,9 @@
 
             <TextView
                 android:id="@+id/tourNumberViews"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
+                style="@style/textStyle"
                 android:text="1308"
-                android:textAlignment="center"
-                android:textSize="15sp" />
+                android:textAlignment="center" />
         </LinearLayout>
 
         <LinearLayout
@@ -53,69 +50,44 @@
 
                 <TextView
                     android:id="@+id/tourNameTextView"
+                    style="@style/headingsTextStyle"
                     android:layout_width="0dp"
-                    android:layout_height="wrap_content"
                     android:layout_weight="10"
-                    android:text="Экологическая поездка на Кольсай"
-                    android:textSize="20sp"
-                    android:textStyle="bold" />
+                    android:text="Экологическая поездка на Кольсай" />
 
                 <ImageView
                     android:layout_width="30dp"
                     android:layout_height="30dp"
                     android:layout_gravity="end"
-
-                    android:src="@drawable/ic_settings_black_24dp" />
+                    android:src="@drawable/ic_add_black_24dp" />
             </LinearLayout>
 
 
             <TextView
                 android:id="@+id/tourOperatorTextView"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="5dp"
-                android:text="Оператор: Кольсай Туры"
-                android:textAlignment="center"
-                android:textSize="15sp" />
+                style="@style/textStyle"
+                android:text="Оператор: Кольсай Туры" />
 
             <TextView
                 android:id="@+id/tourCategoryTextView"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="5dp"
-                android:text="Категория: Туризм"
-                android:textAlignment="center"
-                android:textSize="15sp" />
+                style="@style/textStyle"
+                android:text="Категория: Туризм" />
 
             <TextView
                 android:id="@+id/tourLocationTextView"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="5dp"
-                android:text="Локация: Кольсай"
-                android:textAlignment="center"
-                android:textSize="15sp" />
+                style="@style/textStyle"
+                android:text="Локация: Кольсай" />
 
             <TextView
                 android:id="@+id/tourDateAddedTextView"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="5dp"
-                android:text="Дата добавления: 02.05.2016"
-                android:textAlignment="center"
-                android:textSize="15sp" />
+                style="@style/textStyle"
+                android:text="Дата добавления: 02.05.2016" />
 
             <TextView
                 android:id="@+id/tourPriceTextView"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                style="@style/textStyle"
                 android:layout_below="@+id/tourNameTextView"
-                android:layout_marginBottom="5dp"
-                android:text="Цена: 50000 тг"
-                android:textAlignment="center"
-                android:textSize="15sp" />
+                android:text="Цена: 50000 тг" />
         </LinearLayout>
-
-
     </LinearLayout>
 </LinearLayout>

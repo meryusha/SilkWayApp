@@ -55,7 +55,7 @@ public class ToursFeedAdapter extends BaseAdapter {
     public View getView(final int position, View convertView, ViewGroup parent) {
         itemViewHolder = null;
         if (convertView == null) {
-            convertView = layoutInflater.inflate(R.layout.tour_list_view_item, parent, false);
+            convertView = layoutInflater.inflate(R.layout.list_view_item_tour, parent, false);
             itemViewHolder = new ItemViewHolder(convertView);
             convertView.setTag(itemViewHolder);
             // ViewGroup.LayoutParams lp = itemViewHolder.tourImageView.getLayoutParams();

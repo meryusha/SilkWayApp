@@ -50,7 +50,7 @@ public class AgentViewOfferListViewAdapter extends BaseAdapter {
     public View getView(int position, View convertView, ViewGroup parent) {
         AgentViewOfferListViewAdapter.ViewHolder viewHolder = null;
         if (convertView == null) {
-            convertView = layoutInflater.inflate(R.layout.agent_view_offer_list_view_item, null);
+            convertView = layoutInflater.inflate(R.layout.list_view_item_agent_view_offer, null);
             viewHolder = new AgentViewOfferListViewAdapter.ViewHolder(convertView);
             convertView.setTag(viewHolder);
         } else {

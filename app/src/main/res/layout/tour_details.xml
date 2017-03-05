@@ -2,63 +2,44 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:padding="10dp">
+    android:layout_margin="10dp"
+    android:orientation="vertical">
 
     <TextView
         android:id="@+id/tourNameTextView"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="5dp"
+        style="@style/headingsTextStyle"
         android:text="Тур по Каркаралинску"
         android:textAlignment="center"
-        android:textSize="30sp" />
+        android:textSize="25sp" />
 
     <TextView
         android:id="@+id/tourDescriptionTextView"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="5dp"
-        android:text="Белорусский санаторий «Боровое» получил свое название не случайно. Он уютно расположился вдалеке от областных городов и столицы, от бесконечного движения, спешки и шума, в величественном сосновом бору, на берегу живописного озера, в которое впадает река с мелодичным, как хрустальный звон "
-        android:textSize="20sp" />
+        style="@style/textStyle"
+        android:text="Белорусский санаторий «Боровое» получил свое название не случайно. Он уютно расположился вдалеке от областных городов и столицы, от бесконечного движения, спешки и шума, в величественном сосновом бору, на берегу живописного озера, в которое впадает река с мелодичным, как хрустальный звон " />
 
     <TextView
         android:id="@+id/tourPriceTextView"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="5dp"
-        android:text="Цена: 5000"
-        android:textSize="20sp" />
+        style="@style/textStyle"
+        android:text="Цена: 5000" />
 
     <TextView
         android:id="@+id/tourLocationTextView"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="5dp"
-        android:text="Расположение"
-        android:textSize="20sp" />
+        style="@style/textStyle"
+        android:text="Расположение" />
 
     <TextView
         android:id="@+id/tourNumberPeopleTextView"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="5dp"
-        android:text="Количество людей"
-
-        android:textSize="20sp" />
+        style="@style/textStyle"
+        android:text="Количество людей" />
 
     <TextView
         android:id="@+id/tourDurationTextView"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Требования"
-        android:textSize="20sp" />
+        style="@style/textStyle"
+        android:text="Требования" />
 
     <TextView
         android:id="@+id/tourRequirementsTextView"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Требования"
-        android:textSize="20sp" />
+        style="@style/textStyle"
+        android:text="Требования" />
 
 </LinearLayout>

@@ -11,10 +11,12 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.Spinner;
+import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.Locale;
 
+import silkway.merey.silkwayapp.activities.MainActivity;
 import silkway.merey.silkwayapp.adapters.LocationAdapter;
 import silkway.merey.silkwayapp.adapters.TypeAdapter;
 import silkway.merey.silkwayapp.data.DataHolder;
@@ -76,9 +78,16 @@ public class ToursFragment extends Fragment {
 
     private void initViews(View v) {
         initListView(v);
+        initToolbar(v);
         initTabs(v);
         initSearchView(v);
         initSpinners(v);
+    }
+
+    private void initToolbar(View v) {
+        TextView toolbarTextView = (TextView) getActivity().findViewById(R.id.toolbar).findViewById(R.id.toolbar_title);
+        toolbarTextView.setText("Туры");
+        ((MainActivity) getActivity()).getSupportActionBar().setDisplayShowTitleEnabled(false);
     }
 
     private void initSpinners(View v) {

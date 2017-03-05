@@ -38,7 +38,6 @@ public class TourDetailsActivity extends AppCompatActivity {
     private ArrayList<Tour> tours;
     private ViewPager pager;
     private Toolbar toolbar;
-    private TextView detailsTextView;
     private final Integer[] IMAGES = {R.drawable.nature, R.drawable.nature, R.drawable.nature, R.drawable.nature};
     private ArrayList<Integer> ImagesArray = new ArrayList<Integer>();
     private Button toogleButtonStats;
@@ -150,8 +149,11 @@ public class TourDetailsActivity extends AppCompatActivity {
     private void setToolbar() {
 
         toolbar = (Toolbar) findViewById(R.id.toolbar);
+        TextView toolbarTextView = (TextView) toolbar.findViewById(R.id.toolbar_title);
+        toolbarTextView.setText("Тур");
         setSupportActionBar(toolbar);
         if (getSupportActionBar() != null) {
+            getSupportActionBar().setDisplayShowTitleEnabled(false);
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         }
     }

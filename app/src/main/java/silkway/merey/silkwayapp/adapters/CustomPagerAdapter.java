@@ -33,7 +33,7 @@ public class CustomPagerAdapter extends PagerAdapter {
     public Object instantiateItem(ViewGroup collection, int position) {
         TimetableDay day = days.get(position);
         LayoutInflater inflater = LayoutInflater.from(mContext);
-        ViewGroup layout = (ViewGroup) inflater.inflate(R.layout.timetable_day, collection, false);
+        ViewGroup layout = (ViewGroup) inflater.inflate(R.layout.viewpager_timetable_day, collection, false);
         listView = (ListView) layout.findViewById(R.id.timetableListView);
         listView.setAdapter(new ArrayAdapter<>(mContext, android.R.layout.simple_list_item_1, mContext.getResources().getStringArray(R.array.timetable)));
         collection.addView(layout);

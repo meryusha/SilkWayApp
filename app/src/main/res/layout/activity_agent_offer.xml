@@ -5,6 +5,7 @@
     android:id="@+id/activity_agent_offer"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+
     android:orientation="vertical"
     tools:context="silkway.merey.silkwayapp.activities.AgentOfferActivity">
 
@@ -15,14 +16,13 @@
 
     <silkway.merey.silkwayapp.classes.VerticalScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:layout_margin="@dimen/fab_margin">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical"
-            android:paddingLeft="5dp"
-            android:paddingRight="5dp"
             android:paddingTop="5dp">
 
             <LinearLayout
@@ -31,49 +31,45 @@
                 android:orientation="horizontal">
 
                 <LinearLayout
-                    android:layout_width="0dp"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_weight="30"
                     android:orientation="vertical">
 
                     <ImageView
-                        android:layout_width="70dp"
-                        android:layout_height="70dp"
+                        android:layout_width="120dp"
+                        android:layout_height="120dp"
+                        android:layout_gravity="center"
+                        android:layout_margin="5dp"
+                        android:scaleType="centerCrop"
                         android:src="@drawable/nature" />
 
                     <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                        style="@style/textStyle"
                         android:text="Explore Asia"
                         android:textAlignment="center" />
                 </LinearLayout>
 
                 <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="70"
-                    android:text="is the Cambodia-based Tour Operator and Travel Company. Since inception in 2006
-        with our 15 years of experience" />
+                    style="@style/textStyle"
+                    android:text="is the Cambodia-based Tour Operator and Travel Company. Since inception in 2006 with our 15 years of experience" />
             </LinearLayout>
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:paddingLeft="5dp"
-                android:paddingRight="5dp"
-                android:paddingTop="5dp">
+                android:layout_margin="5dp"
+                android:orientation="horizontal">
 
                 <TextView
+                    style="@style/textStyle"
                     android:layout_width="0dp"
-                    android:layout_height="wrap_content"
                     android:layout_weight="70"
                     android:text="5 changes"
                     android:textAlignment="center" />
 
                 <TextView
+                    style="@style/textStyle"
                     android:layout_width="0dp"
-                    android:layout_height="wrap_content"
                     android:layout_weight="30"
                     android:text="3 hours ago"
                     android:textAlignment="center" />
@@ -125,7 +121,6 @@
                 app:ael_interpolator="bounce"
                 app:ael_orientation="vertical">
 
-
                 <include
                     layout="@layout/tour_details"
                     android:layout_width="match_parent"
@@ -149,9 +144,8 @@
                 app:ael_interpolator="bounce"
                 app:ael_orientation="vertical">
 
-
                 <include
-                    layout="@layout/timetable_viewpager"
+                    layout="@layout/viewpager_timetable"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content" />
             </com.github.aakira.expandablelayout.ExpandableRelativeLayout>

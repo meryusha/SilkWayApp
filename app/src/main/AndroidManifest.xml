@@ -3,7 +3,7 @@
     package="silkway.merey.silkwayapp">
 
     <uses-library android:name="com.google.android.maps" />
-
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.INTERNET" />
 
     <application
@@ -25,6 +25,7 @@
             android:name=".activities.TourDetailsActivity"
             android:theme="@style/StyledIndicators" />
         <activity android:name=".activities.AgentOfferActivity" />
+        <activity android:name=".activities.AddTourActivity"></activity>
     </application>
 
 </manifest>
