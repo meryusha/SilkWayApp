@@ -8,10 +8,12 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import silkway.merey.silkwayapp.R;
 import silkway.merey.silkwayapp.activities.AddTourActivity;
 import silkway.merey.silkwayapp.activities.AgentOfferActivity;
+import silkway.merey.silkwayapp.activities.MainActivity;
 
 
 public class ProfileFragment extends Fragment {
@@ -46,23 +48,20 @@ public class ProfileFragment extends Fragment {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
-        Intent intent = new Intent(getActivity(), AddTourActivity.class);
-        startActivity(intent);
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-
+        initToolbar();
         return inflater.inflate(R.layout.fragment_profile, container, false);
     }
 
-    // TODO: Rename method, update argument and hook method into UI event
-    public void onButtonPressed(Uri uri) {
-        if (mListener != null) {
-            mListener.onFragmentInteraction(uri);
-        }
+    private void initToolbar() {
+        TextView toolbarTextView = (TextView) getActivity().findViewById(R.id.toolbar).findViewById(R.id.toolbar_title);
+        toolbarTextView.setText("Мой Профиль");
+        ((MainActivity) getActivity()).getSupportActionBar().setDisplayShowTitleEnabled(false);
     }
 
     @Override

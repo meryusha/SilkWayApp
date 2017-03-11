@@ -72,13 +72,9 @@ public class MainActivity extends AppCompatActivity implements ToursFragment.OnT
             case R.id.profile:
                 fragmentClass = ProfileFragment.class;
                 break;
-            case R.id.main:
+            case R.id.tours:
                 fragmentClass = ToursFragment.class;
                 break;
-        //    case R.id.tours:
-          //      fragmentClass = AgentMyToursActivityFragment.class;
-           //     break;
-
             default:
                 //Log.d("Main", "In default");
                 fragmentClass = ToursFragment.class;

@@ -50,59 +50,24 @@ public class TourDetailsActivity extends AppCompatActivity {
     private ViewPager timetableViewPager;
 
     @Override
-
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_tour_details);
-        setToolbar();
-        //Set the pager with an adapter
-        tours = DataHolder.getInstance().getTours();
-        initViewPager();
         initViews();
-
 
     }
 
     private void initViews() {
-        toogleButtonStats = (Button) findViewById(R.id.toogleButtonStats);
-        toogleButtonSched = (Button) findViewById(R.id.toogleButtonSched);
-        toogleButtonOffers = (Button) findViewById(R.id.toogleButtonOffers);
-        expandableRelativeLayoutStats = (ExpandableRelativeLayout) findViewById(R.id.expandableLayoutStatistics);
-        expandableRelativeLayoutSched = (ExpandableRelativeLayout) findViewById(R.id.expandableLayoutSchedule);
-        expandableRelativeLayoutOffers = (ExpandableRelativeLayout) findViewById(R.id.expandableLayoutOffers);
+        setToolbar();
+        initPhotos();
+        initDetails();
+        initSchedule();
+        initTimetable();
+        initStatistics();
+        initOffers();
+        tours = DataHolder.getInstance().getTours();
+        initViewPager();
 
-
-        //arrayList
-        ArrayList<TimetableDay> days = new ArrayList<>();
-        days.add(new TimetableDay(1));
-        days.add(new TimetableDay(2));
-        days.add(new TimetableDay(3));
-        timetableViewPager = (ViewPager) findViewById(R.id.viewPager);
-        timetableViewPager.setAdapter(new CustomPagerAdapter(this, days));
-
-        expandableRelativeLayoutOffers.setListener(new ExpandableLayoutListenerAdapter() {
-            @Override
-            public void onPreOpen() {
-                toogleButtonOffers.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_keyboard_arrow_down_black_24dp, 0);
-            }
-
-            @Override
-            public void onPreClose() {
-                toogleButtonOffers.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_keyboard_arrow_left_black_24dp, 0);
-            }
-        });
-
-        expandableRelativeLayoutSched.setListener(new ExpandableLayoutListenerAdapter() {
-            @Override
-            public void onPreOpen() {
-                toogleButtonSched.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_keyboard_arrow_down_black_24dp, 0);
-            }
-
-            @Override
-            public void onPreClose() {
-                toogleButtonSched.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_keyboard_arrow_left_black_24dp, 0);
-            }
-        });
 
         expandableRelativeLayoutStats.setListener(new ExpandableLayoutListenerAdapter() {
             @Override
@@ -117,6 +82,61 @@ public class TourDetailsActivity extends AppCompatActivity {
         });
 
 
+    }
+
+    private void initSchedule() {
+        expandableRelativeLayoutSched.setListener(new ExpandableLayoutListenerAdapter() {
+            @Override
+            public void onPreOpen() {
+                toogleButtonSched.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_keyboard_arrow_down_black_24dp, 0);
+            }
+
+            @Override
+            public void onPreClose() {
+                toogleButtonSched.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_keyboard_arrow_left_black_24dp, 0);
+            }
+        });
+    }
+
+    private void initOffers() {
+        toogleButtonOffers = (Button) findViewById(R.id.toogleButtonOffers);
+        expandableRelativeLayoutOffers = (ExpandableRelativeLayout) findViewById(R.id.expandableLayoutOffers);
+        expandableRelativeLayoutOffers.setListener(new ExpandableLayoutListenerAdapter() {
+            @Override
+            public void onPreOpen() {
+                toogleButtonOffers.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_keyboard_arrow_down_black_24dp, 0);
+            }
+
+            @Override
+            public void onPreClose() {
+                toogleButtonOffers.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_keyboard_arrow_left_black_24dp, 0);
+            }
+        });
+    }
+
+    private void initStatistics() {
+        toogleButtonStats = (Button) findViewById(R.id.toogleButtonStats);
+        expandableRelativeLayoutStats = (ExpandableRelativeLayout) findViewById(R.id.expandableLayoutStatistics);
+    }
+
+    private void initTimetable() {
+        toogleButtonSched = (Button) findViewById(R.id.toogleButtonSched);
+        expandableRelativeLayoutSched = (ExpandableRelativeLayout) findViewById(R.id.expandableLayoutSchedule);
+        //arrayList
+        ArrayList<TimetableDay> days = new ArrayList<>();
+        days.add(new TimetableDay(1));
+        days.add(new TimetableDay(2));
+        days.add(new TimetableDay(3));
+        timetableViewPager = (ViewPager) findViewById(R.id.viewPager);
+        timetableViewPager.setAdapter(new CustomPagerAdapter(this, days));
+
+    }
+
+    private void initDetails() {
+
+    }
+
+    private void initPhotos() {
         //testing
         List<TourImage> tourImages = new ArrayList<TourImage>();
         tourImages.add(new TourImage());
@@ -138,6 +158,7 @@ public class TourDetailsActivity extends AppCompatActivity {
                 onListViewClicked(position);
             }
         });
+
     }
 
     private void onListViewClicked(int position) {

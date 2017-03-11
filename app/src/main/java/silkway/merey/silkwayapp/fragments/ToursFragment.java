@@ -1,7 +1,9 @@
 package silkway.merey.silkwayapp.fragments;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.SearchView;
@@ -9,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -16,6 +19,7 @@ import android.widget.TextView;
 import java.util.ArrayList;
 import java.util.Locale;
 
+import silkway.merey.silkwayapp.activities.AddTourActivity;
 import silkway.merey.silkwayapp.activities.MainActivity;
 import silkway.merey.silkwayapp.adapters.LocationAdapter;
 import silkway.merey.silkwayapp.adapters.TypeAdapter;
@@ -42,6 +46,7 @@ public class ToursFragment extends Fragment {
     private SearchView searchView;
     private Spinner locationSpinner;
     private Spinner typeSpinner;
+    private FloatingActionButton floatingButton;
 
     public ToursFragment() {
         // Required empty public constructor
@@ -78,13 +83,13 @@ public class ToursFragment extends Fragment {
 
     private void initViews(View v) {
         initListView(v);
-        initToolbar(v);
+        initToolbar();
         initTabs(v);
         initSearchView(v);
         initSpinners(v);
     }
 
-    private void initToolbar(View v) {
+    private void initToolbar() {
         TextView toolbarTextView = (TextView) getActivity().findViewById(R.id.toolbar).findViewById(R.id.toolbar_title);
         toolbarTextView.setText("Туры");
         ((MainActivity) getActivity()).getSupportActionBar().setDisplayShowTitleEnabled(false);
@@ -175,6 +180,14 @@ public class ToursFragment extends Fragment {
     }
 
     private void initListView(View v) {
+        floatingButton = (FloatingActionButton) v.findViewById(R.id.floatingButton);
+        floatingButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getActivity(), AddTourActivity.class);
+                startActivity(intent);
+            }
+        });
         listView = (ListView) v.findViewById(R.id.listView);
         tryListView();
         adapter = new ToursFeedAdapter(getActivity(), tours);

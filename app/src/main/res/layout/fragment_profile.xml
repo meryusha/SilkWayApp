@@ -1,31 +1,60 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:layout_margin="@dimen/fab_margin"
+    android:orientation="vertical"
     tools:context="silkway.merey.silkwayapp.fragments.ProfileFragment">
 
     <!-- TODO: Update blank fragment layout -->
-    <com.github.aakira.expandablelayout.ExpandableLinearLayout
-        android:id="@+id/expandableLayout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:ael_duration="500"
-        app:ael_expanded="false"
-        app:ael_interpolator="bounce"
-        app:ael_orientation="vertical">
+    <de.hdodenhof.circleimageview.CircleImageView xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/profile_image"
+        android:layout_width="96dp"
+        android:layout_height="96dp"
+        android:layout_gravity="center"
+        android:layout_marginBottom="10dp"
+        android:src="@drawable/ic_account_circle_black_24dp"
+        app:civ_border_color="#FF000000"
+        app:civ_border_width="2dp" />
 
-        <TextView
-            android:id="@+id/text"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="sample" />
+    <TextView
+        android:id="@+id/userNicknameTextView"
+        style="@style/headingsTextStyle"
+        android:text="Мерей"
+        android:textAlignment="center"
+        android:textSize="18sp" />
 
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/text"
-            android:text="sample2" />
-    </com.github.aakira.expandablelayout.ExpandableLinearLayout>
+    <TextView
+        android:id="@+id/userRatingTextView"
+        style="@style/textStyle"
+        android:text="Рейтинг: 90%"
+        android:textAlignment="center" />
 
-</FrameLayout>
+    <TextView
+        style="@style/headingsTextStyle"
+        android:text="Описание" />
+
+    <TextView
+        android:id="@+id/usersDetailsTextView"
+        style="@style/textStyle" />
+
+    <TextView
+        style="@style/headingsTextStyle"
+        android:text="Дата регистрации" />
+
+    <TextView
+        android:id="@+id/registrartionDateTextView"
+        style="@style/textStyle"
+        android:text="" />
+
+    <TextView
+        style="@style/headingsTextStyle"
+        android:text="Контакты" />
+
+    <TextView
+        android:id="@+id/contactDetailsDateTextView"
+        style="@style/textStyle"
+        android:text="" />
+
+</LinearLayout>

@@ -3,16 +3,12 @@
     <group android:checkableBehavior="single">
         <item
             android:id="@+id/tours"
-
-            android:title="Tours" />
+            android:title="Туры" />
         <item
             android:id="@+id/profile"
-
             android:title="Профиль" />
-        <item
-            android:id="@+id/main"
-            android:title="Главная" />
-     <!--->   android:icon="@drawable/ic_home_black_48dp"<-->
+
+        <!--->   android:icon="@drawable/ic_home_black_48dp"<-->
 
     </group>
 

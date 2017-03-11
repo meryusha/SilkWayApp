@@ -26,13 +26,17 @@ import silkway.merey.silkwayapp.classes.TourImage;
 
 
 public class AgentOfferActivity extends AppCompatActivity {
+    //buttons
     private Button toogleButtonPhotos;
     private Button toogleButtonTourDesc;
     private Button toogleButtonTourProgs;
-    private Toolbar toolbar;
+
+    //exp layouts
     private ExpandableRelativeLayout expandableRelativeLayoutPhotos;
     private ExpandableRelativeLayout expandableRelativeLayoutTourDesc;
     private ExpandableRelativeLayout expandableRelativeLayoutTourProgs;
+
+    private Toolbar toolbar;
     private ListView photosListView;
     private ViewPager timetableViewPager;
 
@@ -40,18 +44,23 @@ public class AgentOfferActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_agent_offer);
-        setToolbar();
+
         initViews();
 
     }
 
     private void initViews() {
-        toogleButtonPhotos = (Button) findViewById(R.id.toogleButtonPhotos);
-        toogleButtonTourProgs = (Button) findViewById(R.id.toogleButtonTourProgs);
+        setToolbar();
+        initPhotos();
+        initTimetable();
+        initDescription();
+    }
+
+    private void initDescription() {
+
         toogleButtonTourDesc = (Button) findViewById(R.id.toogleButtonTourDesc);
 
-        expandableRelativeLayoutPhotos = (ExpandableRelativeLayout) findViewById(R.id.expandableLayoutPhotos);
-        expandableRelativeLayoutTourProgs = (ExpandableRelativeLayout) findViewById(R.id.expandableLayoutTourProgs);
+
         expandableRelativeLayoutTourDesc = (ExpandableRelativeLayout) findViewById(R.id.expandableLayoutTourDesc);
 
 
@@ -66,17 +75,12 @@ public class AgentOfferActivity extends AppCompatActivity {
                 toogleButtonTourDesc.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_keyboard_arrow_left_black_24dp, 0);
             }
         });
-        expandableRelativeLayoutPhotos.setListener(new ExpandableLayoutListenerAdapter() {
-            @Override
-            public void onPreOpen() {
-                toogleButtonPhotos.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_keyboard_arrow_down_black_24dp, 0);
-            }
+    }
 
-            @Override
-            public void onPreClose() {
-                toogleButtonPhotos.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_keyboard_arrow_left_black_24dp, 0);
-            }
-        });
+    private void initTimetable() {
+        toogleButtonTourProgs = (Button) findViewById(R.id.toogleButtonTourProgs);
+        expandableRelativeLayoutTourProgs = (ExpandableRelativeLayout) findViewById(R.id.expandableLayoutTourProgs);
+
         expandableRelativeLayoutTourProgs.setListener(new ExpandableLayoutListenerAdapter() {
             @Override
             public void onPreOpen() {
@@ -88,6 +92,32 @@ public class AgentOfferActivity extends AppCompatActivity {
                 toogleButtonTourProgs.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_keyboard_arrow_left_black_24dp, 0);
             }
         });
+
+
+        ArrayList<TimetableDay> days = new ArrayList<>();
+        days.add(new TimetableDay(1));
+        days.add(new TimetableDay(2));
+        days.add(new TimetableDay(3));
+        timetableViewPager = (ViewPager) findViewById(R.id.viewPager);
+        timetableViewPager.setAdapter(new CustomPagerAdapter(this, days));
+    }
+
+    private void initPhotos() {
+        toogleButtonPhotos = (Button) findViewById(R.id.toogleButtonPhotos);
+        expandableRelativeLayoutPhotos = (ExpandableRelativeLayout) findViewById(R.id.expandableLayoutPhotos);
+        expandableRelativeLayoutPhotos.setListener(new ExpandableLayoutListenerAdapter() {
+            @Override
+            public void onPreOpen() {
+                toogleButtonPhotos.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_keyboard_arrow_down_black_24dp, 0);
+            }
+
+            @Override
+            public void onPreClose() {
+                toogleButtonPhotos.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_keyboard_arrow_left_black_24dp, 0);
+            }
+        });
+
+
         photosListView = (ListView) findViewById(R.id.photosListView);
 
 
@@ -108,13 +138,6 @@ public class AgentOfferActivity extends AppCompatActivity {
         photosListView.requestLayout();
         photosListView.setAdapter(new PhotosListViewAdapter(this, tourImages));
 
-
-        ArrayList<TimetableDay> days = new ArrayList<>();
-        days.add(new TimetableDay(1));
-        days.add(new TimetableDay(2));
-        days.add(new TimetableDay(3));
-        timetableViewPager = (ViewPager) findViewById(R.id.viewPager);
-        timetableViewPager.setAdapter(new CustomPagerAdapter(this, days));
     }
 
     private void setToolbar() {

@@ -1,14 +1,19 @@
 package silkway.merey.silkwayapp.activities;
 
+
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.provider.MediaStore;
 import android.support.design.widget.TabLayout;
+
+import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
@@ -25,73 +30,92 @@ import silkway.merey.silkwayapp.R;
 import silkway.merey.silkwayapp.adapters.CreateTimetableViewPagerAdapter;
 
 public class AddTourActivity extends AppCompatActivity {
-    private Toolbar toolbar;
+
+    //ints
     private static final int PICK_IMAGE = 1;
-    private ViewPager timetableViewPager;
+    private int addedImages = 0;
+    private final int MAX_ADDED_IMAGES = 5;
+    private int dayCounter = 1;
+    private final int MAX_ADDED_DAYS = 10;
+
+    //buttons
     private Button addImageButton;
     private Button addDayButton;
-    private int addedImages = 1;
-    private final int MAX_ADDED_IMAGES = 5;
+    private Button removeDayButton;
+
+    //Images
+    private ImageView currentImage;
+    private ImageView addTourImageView;
+
+    //editTexts
+    private EditText addTourEditText;
+
+    private Toolbar toolbar;
+    private ViewPager timetableViewPager;
     private LinearLayout layout;
     private List<View> images;
     private ProgressDialog dialog;
-    private ImageView currentImage;
-    private ImageView addTourImageView;
-    private EditText addTourEditText;
     private TabLayout tabLayout;
-    private int dayCounter = 1;
+    private CreateTimetableViewPagerAdapter adapter;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_tour);
         initViews();
-        setToolbar();
-        initTabs();
-    }
 
-    private void initTabs() {
-        final CreateTimetableViewPagerAdapter adapter = new CreateTimetableViewPagerAdapter(getSupportFragmentManager());
-        timetableViewPager = (ViewPager) findViewById(R.id.viewpager);
-        timetableViewPager.setAdapter(adapter);
-        tabLayout = (TabLayout) findViewById(R.id.tabLayout);
-        tabLayout.setupWithViewPager(timetableViewPager);
-        adapter.addFragment(tabLayout);
-        tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
-            @Override
-            public void onTabSelected(TabLayout.Tab tab) {
-                int position = tab.getPosition();
-                switch (position) {
-                    case 0:
-                        break;
-                    case 1:
-                        break;
-                    case 2:
-                        break;
-                    default:
-                }
-            }
-
-            @Override
-            public void onTabUnselected(TabLayout.Tab tab) {
-
-            }
-
-            @Override
-            public void onTabReselected(TabLayout.Tab tab) {
-
-            }
-        });
-        addDayButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                adapter.addFragment(tabLayout);
-            }
-        });
     }
 
     private void initViews() {
+        setToolbar();
+        initPhotos();
+        initVideo();
+        initTimetable();
+        initInfo();
+    }
+
+    private void initInfo() {
+
+    }
+
+    private void initTimetable() {
         addDayButton = (Button) findViewById(R.id.addButton);
+        removeDayButton = (Button) findViewById(R.id.removeButton);
+        adapter = new CreateTimetableViewPagerAdapter(getSupportFragmentManager());
+        timetableViewPager = (ViewPager) findViewById(R.id.viewpager);
+        timetableViewPager.setAdapter(adapter);
+        timetableViewPager.setOffscreenPageLimit(MAX_ADDED_DAYS);
+        tabLayout = (TabLayout) findViewById(R.id.tabLayout);
+        tabLayout.setupWithViewPager(timetableViewPager);
+        adapter.addFragment(tabLayout);
+
+        addDayButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (dayCounter <= MAX_ADDED_DAYS) {
+                    adapter.addFragment(tabLayout);
+                    dayCounter++;
+                }
+            }
+        });
+        removeDayButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (dayCounter > 1) {
+                    dayCounter--;
+                    adapter.removeFragment(tabLayout);
+                }
+            }
+        });
+    }
+
+
+    private void initVideo() {
+
+    }
+
+    private void initPhotos() {
         images = new ArrayList<>();
         addImageButton = (Button) findViewById(R.id.addImageButton);
         addTourImageView = (ImageView) findViewById(R.id.addTourImageView);
@@ -102,6 +126,8 @@ public class AddTourActivity extends AppCompatActivity {
                 loadImage();
             }
         });
+        findViewById(R.id.photoDeleteTextView).setEnabled(false);
+        findViewById(R.id.photoDeleteTextView).setVisibility(View.INVISIBLE);
         addTourEditText = (EditText) findViewById(R.id.addTourEditText);
         addImageButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -110,16 +136,23 @@ public class AddTourActivity extends AppCompatActivity {
             }
         });
         layout = (LinearLayout) findViewById(R.id.photos_layout);
-
-
     }
 
     private void onAddImageClickButton() {
         if (addedImages <= MAX_ADDED_IMAGES) {
             addedImages++;
-            View child = getLayoutInflater().inflate(R.layout.add_tour_photos, null);
+            final View child = getLayoutInflater().inflate(R.layout.add_tour_photos, null);
             layout.addView(child);
             images.add(child);
+            TextView deleteTextView = (TextView) child.findViewById(R.id.photoDeleteTextView);
+            deleteTextView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    layout.removeView(child);
+                    images.remove(child);
+
+                }
+            });
             final ImageView iv = (ImageView) child.findViewById(R.id.addTourImageView);
             iv.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -181,6 +214,7 @@ public class AddTourActivity extends AppCompatActivity {
         }
     }
 
+
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
@@ -188,5 +222,6 @@ public class AddTourActivity extends AppCompatActivity {
         }
         return super.onOptionsItemSelected(item);
     }
+
 
 }
