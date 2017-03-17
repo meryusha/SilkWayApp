@@ -32,5 +32,6 @@ dependencies {
     compile 'com.github.JakeWharton:ViewPagerIndicator:2.4.1'
     compile 'com.github.aakira:expandable-layout:1.6.0@aar'
     compile 'de.hdodenhof:circleimageview:2.1.0'
+    compile 'com.backendless:backendless:3.0.8.1'
     testCompile 'junit:junit:4.12'
 }

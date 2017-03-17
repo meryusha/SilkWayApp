@@ -7,11 +7,6 @@
     <string name="drawer_close">Close navigation drawer</string>
     <string name="search_hint">Поиск</string>
 
-    <string-array name="timetable">
-        <item>09:00 - 10:00</item>
-        <item>10:00 - 11:00</item>
-        <item>11:00 - 12:00</item>
-        <item>12:00 - 13:00</item>
-    </string-array>
     <string name="title_activity_searchable">SearchableActivity</string>
+    <string name="title_activity_agent_offer_edit">AgentOfferEditActivity</string>
 </resources>

@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context="silkway.merey.silkwayapp.activities.AddTourActivity">
+    tools:context=".agent.activities.AddTourActivity">
 
     <include
         layout="@layout/toolbar"
@@ -65,19 +65,19 @@
                 android:layout_height="wrap_content" />
 
             <include
-                layout="@layout/tabs_timetable"
+                layout="@layout/timetable_tabs_create"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
 
             <Button
-                android:id="@+id/rejectOfferButton"
+                android:id="@+id/createTourButton"
                 style="@style/acceptRejectButton"
                 android:layout_marginTop="5dp"
                 android:background="#508bc34a"
                 android:text="Создать тур" />
 
             <Button
-                android:id="@+id/acceptOfferButton"
+                android:id="@+id/cancelButton"
                 style="@style/acceptRejectButton"
                 android:background="#50f06292"
                 android:text="Отменить" />

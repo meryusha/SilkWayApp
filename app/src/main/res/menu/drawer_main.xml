@@ -8,7 +8,6 @@
             android:id="@+id/profile"
             android:title="Профиль" />
 
-        <!--->   android:icon="@drawable/ic_home_black_48dp"<-->
 
     </group>
 

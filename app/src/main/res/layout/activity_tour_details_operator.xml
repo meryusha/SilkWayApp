@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+
+    android:orientation="vertical">
+
+    <include
+        layout="@layout/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <silkway.merey.silkwayapp.classes.VerticalScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_margin="@dimen/fab_margin">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+
+                <TextView
+                    style="@style/textStyle"
+                    android:text="Автор Тура" />
+
+                <include
+                    layout="@layout/drawer_header"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+
+                <include
+                    layout="@layout/viewpager_images"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+
+                <include
+                    layout="@layout/tour_details"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+
+                <include
+                    layout="@layout/timetable_tabs"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+
+
+                <Button
+                    android:id="@+id/toogleButtonOffers"
+                    style="@style/buttonExpandable"
+                    android:background="@color/transparent"
+                    android:drawableRight="@drawable/ic_keyboard_arrow_left_black_24dp"
+                    android:onClick="onClickToogleOffers"
+                    android:text="История переговоров" />
+
+                <com.github.aakira.expandablelayout.ExpandableRelativeLayout
+                    android:id="@+id/expandableLayoutOffers"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    app:ael_duration="500"
+                    app:ael_expanded="false"
+                    app:ael_interpolator="bounce"
+                    app:ael_orientation="vertical">
+
+                    <ListView
+                        android:id="@+id/offersListView"
+                        android:layout_width="match_parent"
+                        android:layout_height="300dp"
+                        android:nestedScrollingEnabled="true" />
+                </com.github.aakira.expandablelayout.ExpandableRelativeLayout>
+
+                <View
+                    android:layout_width="wrap_content"
+                    android:layout_height="5dp"></View>
+            </LinearLayout>
+        </LinearLayout>
+    </silkway.merey.silkwayapp.classes.VerticalScrollView>
+
+
+</LinearLayout>

@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context="silkway.merey.silkwayapp.activities.AgentOfferActivity">
+    tools:context=".agent.activities.AgentOfferActivity">
 
     <include
         layout="@layout/toolbar"
@@ -144,7 +144,7 @@
                 app:ael_orientation="vertical">
 
                 <include
-                    layout="@layout/viewpager_timetable"
+                    layout="@layout/timetable_tabs"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content" />
             </com.github.aakira.expandablelayout.ExpandableRelativeLayout>

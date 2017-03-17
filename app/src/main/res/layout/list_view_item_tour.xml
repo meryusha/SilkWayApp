@@ -64,9 +64,9 @@
 
 
             <TextView
-                android:id="@+id/tourOperatorTextView"
+                android:id="@+id/tourAuthorTextView"
                 style="@style/textStyle"
-                android:text="Оператор: Кольсай Туры" />
+                android:text="Автор: Кольсай Туры" />
 
             <TextView
                 android:id="@+id/tourCategoryTextView"

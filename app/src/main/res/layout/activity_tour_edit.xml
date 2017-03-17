@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/activity_add_tour"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".agent.activities.AddTourActivity">
+
+    <include
+        layout="@layout/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_margin="@dimen/fab_margin">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <TextView
+                style="@style/largeHeadingsTextStyle"
+                android:layout_marginBottom="10dp"
+                android:text="Фотографии"
+                android:textAlignment="center" />
+
+            <LinearLayout
+                android:id="@+id/photos_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <include
+                    layout="@layout/add_tour_photos"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+            </LinearLayout>
+
+            <Button
+                android:id="@+id/addImageButton"
+                android:layout_width="match_parent"
+                android:layout_height="30dp"
+                android:layout_marginBottom="5dp"
+                android:background="@color/transparent"
+                android:text="+ Добавить фотографию" />
+
+            <include
+                layout="@layout/add_tour_video"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+            <include
+                layout="@layout/add_tour_map"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+
+            <include
+                layout="@layout/add_tour_info"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+            <include
+                layout="@layout/timetable_tabs_create"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+            <Button
+                android:id="@+id/saveTourButton"
+                style="@style/acceptRejectButton"
+                android:layout_marginTop="5dp"
+                android:background="#508bc34a"
+                android:text="Сохранить тур" />
+
+            <Button
+                android:id="@+id/cancelButton"
+                style="@style/acceptRejectButton"
+                android:background="#50f06292"
+                android:text="Отменить" />
+        </LinearLayout>
+    </ScrollView>
+</LinearLayout>

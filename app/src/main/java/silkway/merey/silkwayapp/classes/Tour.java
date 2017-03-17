@@ -1,5 +1,7 @@
 package silkway.merey.silkwayapp.classes;
 
+import com.backendless.BackendlessUser;
+
 /**
  * Created by Merey on 06.02.17.
  */
@@ -7,22 +9,25 @@ public class Tour {
     private String objectId;
     private String season;
     private int view;
-    private User author;
+    private BackendlessUser author;
     private String duration;
     private int price;
-    private String name;
+    private String title;
     private String videoUrl;
-    //private GeoPoint
+    private String avatarUrl;
+    private Category category;
     private int capacity;
     private Role type;
     private String description;
     private boolean isOpen;
+    private Location location;
+    private String requirements;
 
     public Tour() {
     }
 
     public Tour(String tourName, String tourDescription) {
-        this.name = tourName;
+        this.title = tourName;
         this.description = tourDescription;
     }
 
@@ -50,11 +55,11 @@ public class Tour {
         this.view = view;
     }
 
-    public User getAuthor() {
+    public BackendlessUser getAuthor() {
         return author;
     }
 
-    public void setAuthor(User author) {
+    public void setAuthor(BackendlessUser author) {
         this.author = author;
     }
 
@@ -74,13 +79,10 @@ public class Tour {
         this.price = price;
     }
 
-    public String getName() {
-        return name;
+    public String getTitle() {
+        return title;
     }
 
-    public void setName(String name) {
-        this.name = name;
-    }
 
     public String getVideoUrl() {
         return videoUrl;
@@ -121,4 +123,41 @@ public class Tour {
     public void setOpen(boolean open) {
         isOpen = open;
     }
+
+    public String getAvatarUrl() {
+        return avatarUrl;
+    }
+
+    public void setAvatarUrl(String avatarUrl) {
+        this.avatarUrl = avatarUrl;
+    }
+
+    public Category getCategory() {
+        return category;
+    }
+
+    public void setCategory(Category category) {
+        this.category = category;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public Location getLocation() {
+        return location;
+    }
+
+    public void setLocation(Location location) {
+        this.location = location;
+    }
+
+    public String getRequirements() {
+        return requirements;
+    }
+
+    public void setRequirements(String requirements) {
+        this.requirements = requirements;
+    }
 }
+

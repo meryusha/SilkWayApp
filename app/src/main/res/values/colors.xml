@@ -8,4 +8,6 @@
     <color name="black">#000000</color>
     <color name="transpBlack">#80000000</color>
     <color name="red">#ff3333</color>
+    <color name="orange">#ffeb99</color>
+    <color name="blue">#99ddff</color>
 </resources>

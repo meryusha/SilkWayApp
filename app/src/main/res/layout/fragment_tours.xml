@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context="silkway.merey.silkwayapp.fragments.ToursFragment">
+    tools:context=".agent.fragments.ToursFragment">
 
     <!-- TODO: Update blank fragment layout -->
     <android.support.design.widget.TabLayout
@@ -47,6 +47,7 @@
         android:orientation="horizontal">
 
         <Button
+            android:id="@+id/sortByTop"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="3"
@@ -57,6 +58,7 @@
             android:textSize="10sp" />
 
         <Button
+            android:id="@+id/sortByPrice"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="2"
@@ -66,6 +68,7 @@
             android:textSize="10sp" />
 
         <Button
+            android:id="@+id/sortByDate"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="3"
