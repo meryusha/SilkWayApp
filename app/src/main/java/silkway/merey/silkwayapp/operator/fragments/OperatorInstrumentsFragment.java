@@ -91,9 +91,9 @@ public class OperatorInstrumentsFragment extends Fragment {
         instruments.add("Туристические услуги");
 
         List<Integer> images = new ArrayList<>();
-        images.add(R.drawable.ic_flight_black_24dp);
-        images.add(R.drawable.ic_flight_black_24dp);
-        images.add(R.drawable.ic_flight_black_24dp);
+        images.add(R.drawable.perelety);
+        images.add(R.drawable.hotels);
+        images.add(R.drawable.tours);
         adapter = new InstrumentsListViewAdapter(getActivity(), instruments, images);
         listView.setAdapter(adapter);
 

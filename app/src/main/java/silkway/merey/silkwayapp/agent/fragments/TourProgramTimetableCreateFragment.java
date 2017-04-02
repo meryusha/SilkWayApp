@@ -3,7 +3,6 @@ package silkway.merey.silkwayapp.agent.fragments;
 import android.app.Dialog;
 import android.app.TimePickerDialog;
 import android.content.Context;
-import android.icu.util.Calendar;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.RequiresApi;
@@ -21,28 +20,29 @@ import android.widget.TextView;
 import android.widget.TimePicker;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 import silkway.merey.silkwayapp.R;
+import silkway.merey.silkwayapp.classes.Constants;
 
 public class TourProgramTimetableCreateFragment extends Fragment {
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
+
+    private static final String DAY = "day";
 
     // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
+    private int day;
     private Button addTimeSlotButton;
-    private int timeSlotsCount = 0;
-    private static final int MAX_TIME_SLOTS = 10;
     private LinearLayout layout;
     private List<View> slots;
+    //  private List<TimeInstance> timeInstances;
     private static int hours = 0;
-    private static int minutes;
+    private static int minutes = 0;
+    // private static Map<View, TimeInstance> map = new HashMap<>();
     private static TextView currentTextView;
     private Button closeDayButton;
+    // private EditText timeDescription;
+    //  private static View currentView;
 
 
     public TourProgramTimetableCreateFragment() {
@@ -50,11 +50,10 @@ public class TourProgramTimetableCreateFragment extends Fragment {
     }
 
     // TODO: Rename and change types and number of parameters
-    public static TourProgramTimetableCreateFragment newInstance(String param1, String param2) {
+    public static TourProgramTimetableCreateFragment newInstance(int day) {
         TourProgramTimetableCreateFragment fragment = new TourProgramTimetableCreateFragment();
         Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
+        args.putInt(DAY, day);
         fragment.setArguments(args);
         return fragment;
     }
@@ -63,8 +62,7 @@ public class TourProgramTimetableCreateFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
+            day = getArguments().getInt(DAY);
 
         }
     }
@@ -82,6 +80,7 @@ public class TourProgramTimetableCreateFragment extends Fragment {
         addTimeSlotButton = (Button) v.findViewById(R.id.addTimeButton);
         layout = (LinearLayout) v.findViewById(R.id.timetableTimeLayout);
         slots = new ArrayList<>();
+        //timeInstances = new ArrayList<>();
         addTimeSlotButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -93,11 +92,11 @@ public class TourProgramTimetableCreateFragment extends Fragment {
 
 
     private void addTimeSlot() {
-        if (timeSlotsCount <= MAX_TIME_SLOTS) {
-            timeSlotsCount++;
+        if (slots.size() <= Constants.MAX_ADDED_SLOTS) {
             final View child = getActivity().getLayoutInflater().inflate(R.layout.timetable_tabs_create_row, null);
             layout.addView(child);
             slots.add(child);
+            //   timeInstances.add(new TimeInstance(DataManager.getInstance().getCurrentTour(), ));
             final TextView startTextView = (TextView) child.findViewById(R.id.startTimeTextView);
             startTextView.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -105,6 +104,7 @@ public class TourProgramTimetableCreateFragment extends Fragment {
                     showTimePickerDialog();
                     Log.d("Merey", "I should go second");
                     currentTextView = startTextView;
+                    //  currentView = child;
                 }
             });
             final TextView endTextView = (TextView) child.findViewById(R.id.endTimeTextView);
@@ -114,6 +114,7 @@ public class TourProgramTimetableCreateFragment extends Fragment {
                     showTimePickerDialog();
                     Log.d("Merey", "I should go second");
                     currentTextView = endTextView;
+                    //   currentView = child;
                 }
             });
             ImageView removeTimeSlotImageView = (ImageView) child.findViewById(R.id.removeTimeSlotButton);
@@ -122,8 +123,11 @@ public class TourProgramTimetableCreateFragment extends Fragment {
                 public void onClick(View v) {
                     layout.removeView(child);
                     slots.remove(child);
+                    Log.d("here is", slots.size() + "");
                 }
             });
+
+
         } else {
 
         }
@@ -131,6 +135,10 @@ public class TourProgramTimetableCreateFragment extends Fragment {
 
     private static void setPickedTime() {
         currentTextView.setText(hours + ":" + minutes);
+        //   if(map.containsKey(currentView)){
+        //     map.get(currentView)
+        // }
+        //   map.put(currentView, )
     }
 
     @Override
@@ -178,5 +186,11 @@ public class TourProgramTimetableCreateFragment extends Fragment {
         }
     }
 
+    public List<View> getSlots() {
+        return slots;
+    }
 
+    public int getDay() {
+        return day;
+    }
 }

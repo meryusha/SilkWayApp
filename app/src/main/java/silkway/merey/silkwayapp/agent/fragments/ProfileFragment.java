@@ -4,13 +4,19 @@ import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.backendless.Backendless;
+import com.backendless.BackendlessUser;
+import com.bumptech.glide.Glide;
+
+import de.hdodenhof.circleimageview.CircleImageView;
+import silkway.merey.silkwayapp.DataManager;
 import silkway.merey.silkwayapp.R;
-import silkway.merey.silkwayapp.agent.activities.MainActivity;
 
 
 public class ProfileFragment extends Fragment {
@@ -22,6 +28,9 @@ public class ProfileFragment extends Fragment {
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
+    private TextView userNameTextView;
+    private TextView userDetailsTextView;
+    private CircleImageView imageView;
     private OnFragmentInteractionListener mListener;
 
     public ProfileFragment() {
@@ -52,13 +61,22 @@ public class ProfileFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         initToolbar();
-        return inflater.inflate(R.layout.fragment_profile, container, false);
+        DataManager.getInstance().checkIfUserIsLoggedIn(getActivity());
+        BackendlessUser user = Backendless.UserService.CurrentUser();
+        View v = inflater.inflate(R.layout.fragment_profile, container, false);
+        userNameTextView = (TextView) v.findViewById(R.id.userNameTextView);
+        userDetailsTextView = (TextView) v.findViewById(R.id.usersDetailsTextView);
+        imageView = (CircleImageView) v.findViewById(R.id.profileImageView);
+        userNameTextView.setText(user.getProperty("name").toString());
+        userDetailsTextView.setText(user.getProperty("desc").toString());
+        Glide.with(getActivity()).load(user.getProperty("avatarUrl")).centerCrop().into(imageView);
+        return v;
     }
 
     private void initToolbar() {
         TextView toolbarTextView = (TextView) getActivity().findViewById(R.id.toolbar).findViewById(R.id.toolbar_title);
         toolbarTextView.setText("Мой Профиль");
-        ((MainActivity) getActivity()).getSupportActionBar().setDisplayShowTitleEnabled(false);
+        ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayShowTitleEnabled(false);
     }
 
     @Override

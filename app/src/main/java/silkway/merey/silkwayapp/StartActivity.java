@@ -3,20 +3,23 @@ package silkway.merey.silkwayapp;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 
 import com.backendless.Backendless;
+import com.backendless.BackendlessUser;
+import com.backendless.async.callback.AsyncCallback;
+import com.backendless.exceptions.BackendlessFault;
 
 import silkway.merey.silkwayapp.agent.activities.MainActivity;
+import silkway.merey.silkwayapp.classes.Constants;
 import silkway.merey.silkwayapp.operator.activities.MainActivityOperator;
 
 public class StartActivity extends AppCompatActivity {
     private Button enterAgentButon;
     private Button enterOperatorButton;
-    public final String APP_ID = "A19DE8C5-C6B2-3E7C-FF77-751ED56B8500";
-    public final String SECRET_KEY = "6FC4EE2B-4D36-B494-FF34-E44BF5634100";
-    public final String VESRION = "v1";
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,7 +30,7 @@ public class StartActivity extends AppCompatActivity {
     }
 
     private void initBackendless() {
-        Backendless.initApp(this, APP_ID, SECRET_KEY, VESRION);
+        Backendless.initApp(this, Constants.APP_ID, Constants.SECRET_KEY, Constants.VESRION);
     }
 
     private void initViews() {
@@ -36,25 +39,41 @@ public class StartActivity extends AppCompatActivity {
         enterAgentButon.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                enterAsAgent();
+                logIn(false);
             }
         });
         enterOperatorButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                enterAsOperator();
+                logIn(true);
             }
         });
     }
 
-    private void enterAsAgent() {
-        Intent intent = new Intent(this, MainActivity.class);
-        startActivity(intent);
+    private void logIn(final boolean isOperator) {
+        String username = "operator@mail";
+        if (!isOperator) {
+            username = "agent@mail";
+        }
+        Backendless.UserService.login(username, "12345", new AsyncCallback<BackendlessUser>() {
+            public void handleResponse(BackendlessUser user) {
+                // user has been logged in
+                enterApp(isOperator);
+            }
+
+            public void handleFault(BackendlessFault fault) {
+                DataManager.getInstance().showError(StartActivity.this);
+                Log.e("START", fault.getMessage());
+            }
+        });
     }
 
-    private void enterAsOperator() {
-        Intent intent = new Intent(this, MainActivityOperator.class);
-        startActivity(intent);
 
+    private void enterApp(boolean isOperator) {
+        Intent intent = new Intent(this, MainActivityOperator.class);
+        if (!isOperator) {
+            intent = new Intent(this, MainActivity.class);
+        }
+        startActivity(intent);
     }
 }

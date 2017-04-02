@@ -26,7 +26,6 @@ import com.backendless.BackendlessUser;
 import com.backendless.async.callback.AsyncCallback;
 import com.backendless.exceptions.BackendlessFault;
 import com.backendless.files.BackendlessFile;
-import com.bumptech.glide.Glide;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -37,20 +36,20 @@ import silkway.merey.silkwayapp.R;
 import silkway.merey.silkwayapp.agent.adapters.CreateTimetableViewPagerAdapter;
 import silkway.merey.silkwayapp.classes.Constants;
 import silkway.merey.silkwayapp.classes.Location;
-import silkway.merey.silkwayapp.classes.TimeInstance;
 import silkway.merey.silkwayapp.classes.Tour;
 import silkway.merey.silkwayapp.classes.TourPhoto;
 
-public class TourEditActivity extends AppCompatActivity {
+public class TourCreateActivity extends AppCompatActivity {
 
     //ints
+
     private int dayCounter = 1;
 
     //buttons
     private Button addImageButton;
     private Button addDayButton;
     private Button removeDayButton;
-    private Button saveTourButton;
+    private Button createTourButton;
     private Button cancelButton;
     private BackendlessFile backendlessFile;
     //Images
@@ -67,36 +66,25 @@ public class TourEditActivity extends AppCompatActivity {
     private EditText tourRequirementsEditText;
     private EditText tourSeasonEditText;
 
-    //lists
-    private List<TourPhoto> tourImages;
-    private List<View> imageViews;
-    private List<Boolean> imageBoolList;
-
     private Toolbar toolbar;
+    private Bitmap mainBitmap;
     private ViewPager timetableViewPager;
     private LinearLayout layout;
+    private List<View> images;
     private ProgressDialog dialog;
-    private Bitmap mainBitmap;
     private TabLayout tabLayout;
     private CreateTimetableViewPagerAdapter adapter;
     private Tour tour;
-    private int imageIndex = -1;
-    private List<TimeInstance> timeInstances;
     private BackendlessUser user;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_tour_edit);
-        DataManager.getInstance().checkIfUserIsLoggedIn(this);
-        tour = DataManager.getInstance().getCurrentTour();
-
-        if (tour == null) {
-            finish();
-        }
+        setContentView(R.layout.activity_add_tour);
         initViews();
-    }
+        DataManager.getInstance().checkIfUserIsLoggedIn(this);
 
+    }
 
     private void initViews() {
         setToolbar();
@@ -110,7 +98,7 @@ public class TourEditActivity extends AppCompatActivity {
     private void setToolbar() {
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         TextView toolbarTextView = (TextView) toolbar.findViewById(R.id.toolbar_title);
-        toolbarTextView.setText("Редактировать тур");
+        toolbarTextView.setText("Создать тур");
         setSupportActionBar(toolbar);
         if (getSupportActionBar() != null) {
             getSupportActionBar().setDisplayShowTitleEnabled(false);
@@ -118,47 +106,32 @@ public class TourEditActivity extends AppCompatActivity {
         }
     }
 
-
     private void initPhotos() {
-        imageViews = new ArrayList<>();
-        imageBoolList = new ArrayList<>();
+        images = new ArrayList<>();
         layout = (LinearLayout) findViewById(R.id.photos_layout);
 
-        //load avatar
         initMainPhoto();
-
-        //if we want to add new images
         addImageButton = (Button) findViewById(R.id.addImageButton);
         addImageButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                onAddImageClickButton(null);
+                addImageButtonOnClick();
             }
         });
 
-
-        //loads already existing images with description
-        tourImages = DataManager.getInstance().getTourImages();
-        if (tourImages != null) {
-            for (int i = 0; i < tourImages.size(); i++) {
-                onAddImageClickButton(tourImages.get(i));
-            }
-        } else {
-            tourImages = new ArrayList<>();
-        }
     }
 
     private void initMainPhoto() {
-        mainBitmap = null;
         addTourImageView = (ImageView) findViewById(R.id.addTourImageView);
-        Glide.with(this).load(tour.getAvatarUrl()).centerCrop().into(addTourImageView);
         currentImage = addTourImageView;
+
         addTourImageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                loadImageFromMedia(Constants.PICK_MAIN_IMAGE, -1);
+                loadImageFromMedia(Constants.PICK_MAIN_IMAGE);
             }
         });
+        mainBitmap = null;
         findViewById(R.id.photoDeleteTextView).setEnabled(false);
         findViewById(R.id.photoDeleteTextView).setVisibility(View.INVISIBLE);
         findViewById(R.id.addTourEditText).setEnabled(false);
@@ -168,7 +141,7 @@ public class TourEditActivity extends AppCompatActivity {
 
 
     private void initVideo() {
-        tour = DataManager.getInstance().getCurrentTour();
+
     }
 
 
@@ -203,95 +176,67 @@ public class TourEditActivity extends AppCompatActivity {
         });
     }
 
-
     private void initInfo() {
         tourDescriptionEditText = (EditText) findViewById(R.id.tourDescriptionEditText);
-        tourDescriptionEditText.setText(tour.getDesc());
-
         tourSeasonEditText = (EditText) findViewById(R.id.tourSeasonEditText);
-        tourSeasonEditText.setText(tour.getSeason());
-
         tourDurationEditText = (EditText) findViewById(R.id.tourDurationEditText);
-        tourDurationEditText.setText(tour.getDuration());
-
         tourLocationEditText = (EditText) findViewById(R.id.tourLocationEditText);
-        tourLocationEditText.setText(tour.getLocation().getName());
-
         tourNumberPeopleEditText = (EditText) findViewById(R.id.tourNumberPeopleEditText);
-        tourNumberPeopleEditText.setText(tour.getCapacity() + "");
-
         tourPriceEditText = (EditText) findViewById(R.id.tourPriceEditText);
-        tourPriceEditText.setText(tour.getPrice() + "");
-
         tourNameEditText = (EditText) findViewById(R.id.tourNameEditText);
-        tourNameEditText.setText(tour.getTitle());
-
         tourRequirementsEditText = (EditText) findViewById(R.id.tourRequirementsEditText);
-        tourRequirementsEditText.setText(tour.getRequirements());
 
     }
 
-
     private void initButtons() {
-        saveTourButton = (Button) findViewById(R.id.saveTourButton);
+        createTourButton = (Button) findViewById(R.id.createTourButton);
         cancelButton = (Button) findViewById(R.id.cancelButton);
-        saveTourButton.setOnClickListener(new View.OnClickListener() {
+        createTourButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                saveTour();
+                createTour();
             }
         });
         cancelButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                cancel();
+                cancelButtonOnClick();
             }
         });
 
     }
 
-    private void cancel() {
+
+    //additional methods
+
+    //close activity
+    private void cancelButtonOnClick() {
         finish();
     }
 
 
-    private void onAddImageClickButton(final TourPhoto tourPhoto) {
-        if (imageViews.size() <= Constants.MAX_ADDED_IMAGES) {
+    private void addImageButtonOnClick() {
+        if (images.size() <= Constants.MAX_ADDED_IMAGES) {
             final View child = getLayoutInflater().inflate(R.layout.add_tour_photos, null);
             layout.addView(child);
-            imageViews.add(child);
-            imageBoolList.add(false);
+            images.add(child);
             TextView deleteTextView = (TextView) child.findViewById(R.id.photoDeleteTextView);
             deleteTextView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    if (tourPhoto != null) {
-                        deleteImage(tourPhoto);
-                        tourImages.remove(tourPhoto);
-                    }
-                    final int index = imageViews.indexOf(child);
-                    imageViews.remove(child);
-                    if (index < imageBoolList.size()) {
-                        imageBoolList.remove(index);
-                    }
                     layout.removeView(child);
+                    images.remove(child);
+
                 }
             });
-
             final ImageView iv = (ImageView) child.findViewById(R.id.addTourImageView);
-            if (tourPhoto != null) {
-                Glide.with(this).load(tourPhoto.getUrl()).centerCrop().into(iv);
-                EditText descriptionEditText = (EditText) child.findViewById(R.id.addTourEditText);
-                descriptionEditText.setText(tourPhoto.getDesc());
-            }
             iv.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     currentImage = iv;
-                    final int index = imageViews.indexOf(child);
-                    imageIndex = index;
-                    loadImageFromMedia(Constants.PICK_IMAGE, index);
+                    loadImageFromMedia(Constants.PICK_IMAGE);
                 }
+
             });
         } else {
             //show toast
@@ -299,26 +244,8 @@ public class TourEditActivity extends AppCompatActivity {
         }
     }
 
-    private void deleteImage(TourPhoto tourPhoto) {
-        showDialog(getResources().getString(R.string.dialogTitleSavingInfo), getResources().getString(R.string.dialogMessage));
-        Backendless.Persistence.of(TourPhoto.class).remove(tourPhoto,
-                new AsyncCallback<Long>() {
-                    public void handleResponse(Long response) {
-                        if (dialog.isShowing()) {
-                            dialog.dismiss();
-                        }
-                    }
 
-                    public void handleFault(BackendlessFault fault) {
-                        // an error has occurred, the error code can be
-                        // retrieved with fault.getCode()
-                        DataManager.getInstance().showError(TourEditActivity.this);
-                    }
-                });
-    }
-
-
-    private void loadImageFromMedia(int code, int index) {
+    private void loadImageFromMedia(int code) {
         //open media and load photo
         Intent getIntent = new Intent(Intent.ACTION_GET_CONTENT);
         getIntent.setType("image/+");
@@ -326,7 +253,6 @@ public class TourEditActivity extends AppCompatActivity {
         getIntent.setType("image/+");
         Intent chooseIntent = Intent.createChooser(getIntent, "Выберите фотографию");
         chooseIntent.putExtra(Intent.EXTRA_INITIAL_INTENTS, new Intent[]{pickIntent});
-        //   chooseIntent.putExtra("index", index);
         startActivityForResult(chooseIntent, code);
     }
 
@@ -338,14 +264,6 @@ public class TourEditActivity extends AppCompatActivity {
                 Bitmap bitmap = null;
                 if (data != null) {
                     try {
-
-                        //   int index = data.getIntExtra("index", -1);
-                        int index = imageIndex;
-                        Log.d("HERE IS INDEX", index + "");
-                        if (index >= 0 && index < imageBoolList.size()) {
-                            imageBoolList.remove(index);
-                            imageBoolList.add(index, true);
-                        }
                         bitmap = MediaStore.Images.Media.getBitmap(getApplicationContext().getContentResolver(), data.getData());
                         if (requestCode == Constants.PICK_MAIN_IMAGE) {
                             mainBitmap = bitmap;
@@ -354,6 +272,8 @@ public class TourEditActivity extends AppCompatActivity {
                         e.printStackTrace();
                     }
                     currentImage.setImageBitmap(bitmap);
+
+
                 }
             }
         }
@@ -370,7 +290,9 @@ public class TourEditActivity extends AppCompatActivity {
     }
 
 
-    private void saveTour() {
+    private void createTour() {
+        //createTourSaveInfo();
+        user = Backendless.UserService.CurrentUser();
         String name = tourNameEditText.getText().toString();
         String description = tourDescriptionEditText.getText().toString();
         String locationName = tourLocationEditText.getText().toString();
@@ -403,30 +325,60 @@ public class TourEditActivity extends AppCompatActivity {
             return;
         }
 
+
         Location location = new Location(locationName);
         int index = DataManager.getInstance().checkIfLocationExists(location);
         if (index >= 0) {
             location = DataManager.getInstance().getLocations().get(index);
         }
+
+        tour = new Tour();
+        tour.setPrice(Integer.parseInt(price));
+        tour.setLocation(location);
+        tour.setRequirements(requirements);
+        tour.setAuthor(user);
+        tour.setDuration(duration);
+        tour.setDesc(description);
         tour.setCapacity(Integer.parseInt(numberPeople));
         tour.setTitle(name);
-        tour.setDesc(description);
-        tour.setDuration(duration);
-        tour.setRequirements(requirements);
-        tour.setPrice(Integer.parseInt(price));
         tour.setSeason(season);
-        tour.setLocation(location);
         updateMainImage();
-
 
     }
 
-    private void saveTourInBackend() {
-        showDialog(getResources().getString(R.string.dialogTitleSavingInfo), getResources().getString(R.string.dialogMessage));
+    private void updateMainImage() {
+        if (mainBitmap != null) {
+            Backendless.Files.Android.upload(mainBitmap, Bitmap.CompressFormat.JPEG, 100, "item" + user.getObjectId() + System.currentTimeMillis(), "items", new AsyncCallback<BackendlessFile>() {
+                @Override
+                public void handleResponse(BackendlessFile response) {
+                    Log.d("Add Post", "uploaded file");
+                    backendlessFile = response;
+                    tour.setAvatarUrl(backendlessFile.getFileURL());
+                    showDialog(getResources().getString(R.string.dialogTitleSavingInfo), getResources().getString(R.string.dialogMessage));
+                    saveTour();
+
+                    if (dialog.isShowing()) {
+                        dialog.dismiss();
+                    }
+                }
+
+                @Override
+                public void handleFault(BackendlessFault fault) {
+                    Log.e("AddPost", "error uploading file" + fault.getMessage());
+                    DataManager.getInstance().showError(TourCreateActivity.this);
+                }
+            });
+        } else {
+            showDialog(getResources().getString(R.string.dialogTitleSavingInfo), getResources().getString(R.string.dialogMessage));
+            saveTour();
+
+        }
+    }
+
+    private void saveTour() {
         Backendless.Persistence.of(Tour.class).save(tour, new AsyncCallback<Tour>() {
             @Override
             public void handleResponse(Tour response) {
-                Log.d("Add Post", "EDITED TOUR" + response.getPrice());
                 if (dialog.isShowing()) {
                     dialog.dismiss();
                 }
@@ -437,106 +389,61 @@ public class TourEditActivity extends AppCompatActivity {
 
             @Override
             public void handleFault(BackendlessFault fault) {
-                Log.e("TourEdit", "Failed to post" + fault.getMessage());
-                DataManager.getInstance().showError(TourEditActivity.this);
+                Log.e("CreateTour", "Failed to post" + fault.getMessage());
+                DataManager.getInstance().showError(TourCreateActivity.this);
+
             }
         });
-
-    }
-
-    private void updateMainImage() {
-        if (mainBitmap != null) {
-            user = Backendless.UserService.CurrentUser();
-            Backendless.Files.Android.upload(mainBitmap, Bitmap.CompressFormat.JPEG, 100, "item" + user.getObjectId() + System.currentTimeMillis(), "items", new AsyncCallback<BackendlessFile>() {
-                @Override
-                public void handleResponse(BackendlessFile response) {
-                    Log.d("Add Post", "uploaded file");
-                    backendlessFile = response;
-                    tour.setAvatarUrl(backendlessFile.getFileURL());
-
-                    // showDialog(getResources().getString(R.string.dialogTitleSavingInfo), getResources().getString(R.string.dialogMessage));
-                    saveTourInBackend();
-                }
-
-                @Override
-                public void handleFault(BackendlessFault fault) {
-                    Log.e("AddPost", "error uploading file" + fault.getMessage());
-                    DataManager.getInstance().showError(TourEditActivity.this);
-                }
-            });
-        } else {
-            saveTourInBackend();
-        }
     }
 
 
     private void savePhotos() {
         showDialog(getResources().getString(R.string.dialogTitleLoadingPhoto), getResources().getString(R.string.dialogMessage));
-        for (int i = 0; i < imageViews.size(); i++) {
-            View v = imageViews.get(i);
+        for (int i = 0; i < images.size(); i++) {
+            View v = images.get(i);
             ImageView iv = (ImageView) v.findViewById(R.id.addTourImageView);
-            EditText descriptionEditText = (EditText) v.findViewById(R.id.addTourEditText);
-            String description = descriptionEditText.getText().toString();
-            Log.d("NU", imageBoolList.get(i).toString());
-            if (imageBoolList.get(i)) {
-                Bitmap bitmap = ((BitmapDrawable) iv.getDrawable()).getBitmap();
-                uploadImage(bitmap, description, i);
-            } else {
-                if (i < tourImages.size()) {
-                    TourPhoto photo = tourImages.get(i);
-                    photo.setDesc(description);
-                    savePhoto(photo);
-                }
-            }
+            Bitmap bitmap = ((BitmapDrawable) iv.getDrawable()).getBitmap();
+            uploadImage(bitmap, v);
         }
 
     }
 
-
-    private void uploadImage(Bitmap bitmap, final String description, final int index) {
+    private void uploadImage(Bitmap bitmap, final View v) {
         user = Backendless.UserService.CurrentUser();
-        Backendless.Files.Android.upload(bitmap, Bitmap.CompressFormat.JPEG, 100, "item" + System.currentTimeMillis(), "items", new AsyncCallback<BackendlessFile>() {
-                    @Override
-                    public void handleResponse(BackendlessFile response) {
-                        Log.d("Add Post", "uploaded file");
-                        backendlessFile = response;
-                        if (dialog.isShowing()) {
-                            dialog.dismiss();
-                        }
-                        TourPhoto photo;
-                        if (index >= tourImages.size()) {
-                            photo = new TourPhoto();
-                            photo.setTour(tour);
-                        } else {
-                            photo = tourImages.get(index);
-                        }
-
-                        photo.setDesc(description);
-                        photo.setUrl(backendlessFile.getFileURL());
-                        savePhoto(photo);
-                    }
-
-                    @Override
-                    public void handleFault(BackendlessFault fault) {
-                        Log.e("TourEdit", "error uploading file" + fault.getMessage());
-                        DataManager.getInstance().showError(TourEditActivity.this);
-                    }
+        Backendless.Files.Android.upload(bitmap, Bitmap.CompressFormat.JPEG, 100, "item" + user.getObjectId() + System.currentTimeMillis(), "items", new AsyncCallback<BackendlessFile>() {
+            @Override
+            public void handleResponse(BackendlessFile response) {
+                Log.d("Add Post", "uploaded file");
+                backendlessFile = response;
+                if (dialog.isShowing()) {
+                    dialog.dismiss();
                 }
+                EditText descriptionEditText = (EditText) v.findViewById(R.id.addTourEditText);
+                String description = descriptionEditText.getText().toString();
+                TourPhoto photo = new TourPhoto(tour, backendlessFile.getFileURL(), description);
+                savePhoto(photo);
+            }
 
-        );
+            @Override
+            public void handleFault(BackendlessFault fault) {
+                Log.e("AddPost", "error uploading file" + fault.getMessage());
+                DataManager.getInstance().showError(TourCreateActivity.this);
+            }
+        });
     }
-
 
     private void savePhoto(TourPhoto photo) {
         Backendless.Persistence.of(TourPhoto.class).save(photo, new AsyncCallback<TourPhoto>() {
             @Override
             public void handleResponse(TourPhoto response) {
-                Log.d("Saved TourPhoto", "sucess" + response.getDesc());
+                if (dialog.isShowing()) {
+                    dialog.dismiss();
+                }
             }
 
             @Override
             public void handleFault(BackendlessFault fault) {
-                DataManager.getInstance().showError(TourEditActivity.this);
+                DataManager.getInstance().showError(TourCreateActivity.this);
             }
         });
     }
@@ -555,6 +462,4 @@ public class TourEditActivity extends AppCompatActivity {
         dialog.setMessage(message);
         dialog.show();
     }
-
-
 }

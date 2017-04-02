@@ -3,23 +3,23 @@ package silkway.merey.silkwayapp;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.support.v7.app.AlertDialog;
 import android.util.Log;
-import android.widget.ListView;
 
 import com.backendless.Backendless;
-import com.backendless.BackendlessCollection;
+import com.backendless.BackendlessUser;
 import com.backendless.async.callback.AsyncCallback;
 import com.backendless.exceptions.BackendlessFault;
-import com.backendless.persistence.BackendlessDataQuery;
 
-import java.util.ArrayList;
 import java.util.List;
 
-import silkway.merey.silkwayapp.agent.adapters.ToursFeedAdapter;
-import silkway.merey.silkwayapp.agent.fragments.ToursFragment;
+import silkway.merey.silkwayapp.classes.Category;
+import silkway.merey.silkwayapp.classes.Location;
 import silkway.merey.silkwayapp.classes.TimeInstance;
 import silkway.merey.silkwayapp.classes.Tour;
+import silkway.merey.silkwayapp.classes.TourPhoto;
+import silkway.merey.silkwayapp.classes.TourProposal;
 
 /**
  * Created by Merey on 17.03.17.
@@ -29,132 +29,84 @@ public class DataManager {
     private List<Tour> toursList;
     private Tour currentTour;
     private List<TimeInstance> timeInstances;
+    private List<Category> categories;
+    private List<Location> locations;
     private static final DataManager instance = new DataManager();
     private ProgressDialog dialog;
-    private ToursFragment.OnTourFragmentInteractionListener mListener;
-    private ToursFeedAdapter adapter;
+    private TourProposal currentTourProposal;
+    private List<TourPhoto> tourImages;
+
 
     public static DataManager getInstance() {
         return instance;
     }
 
-    //returns true if successfully created
-    public void createTour(Tour tour, final Context context) {
-        showDialog(context);
-        Backendless.Persistence.of(Tour.class).save(tour, new AsyncCallback<Tour>() {
+
+    public void saveTime(TimeInstance slot) {
+        Backendless.Persistence.of(TimeInstance.class).save(slot, new AsyncCallback<TimeInstance>() {
             @Override
-            public void handleResponse(Tour response) {
-                if (dialog != null && dialog.isShowing()) {
-                    dialog.dismiss();
-                }
+            public void handleResponse(TimeInstance response) {
+
             }
 
             @Override
             public void handleFault(BackendlessFault fault) {
-                Log.e("AddPost", "Failed to post" + fault.getMessage());
-                new AlertDialog.Builder(context)
-                        .setTitle("Ошибка")
-                        .setMessage("Пожалуйста, попробуйте еще раз.")
-                        .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int which) {
+                Log.e("SLOTS", "Failed to post" + fault.getMessage());
+                //showError();
 
-                            }
-                        })
-                        .setIcon(android.R.drawable.ic_dialog_alert)
-                        .show();
             }
         });
-
     }
 
-    private void showDialog(Context context) {
-        dialog = new ProgressDialog(context);
-        dialog.setTitle("Загружаю фото");
-        dialog.setMessage("Пожалуйста, подождите");
-        dialog.show();
+    public void showError(Context context) {
+        new AlertDialog.Builder(context)
+                .setTitle("Ошибка")
+                .setMessage("Пожалуйста, попробуйте еще раз.")
+                .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+
+                    }
+                })
+                .setIcon(android.R.drawable.ic_dialog_alert)
+                .show();
     }
 
-    public void getTours(String whereClause, final Context context, final ListView listView, final ToursFeedAdapter adapter) {
-        showDialog(context);
-        toursList = new ArrayList<>();
-        final AsyncCallback<BackendlessCollection<Tour>> callback = new AsyncCallback<BackendlessCollection<Tour>>() {
-            public void handleResponse(BackendlessCollection<Tour> tours) {
-                toursList = tours.getCurrentPage();
-                Log.d("tours retr", toursList.toString());
-                if (dialog.isShowing()) {
-                    dialog.dismiss();
-                }
-
-                if (listView != null) {
-                   // adapter = new ToursFeedAdapter(context, toursList);
-                    listView.setAdapter(adapter);
-                }
-
-
-            }
-
-            @Override
-            public void handleFault(BackendlessFault backendlessFault) {
-                new AlertDialog.Builder(context)
-                        .setTitle("Ошибка")
-                        .setMessage("Пожалуйста, попробуйте еще раз.")
-                        .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int which) {
-
-                            }
-                        })
-                        .setIcon(android.R.drawable.ic_dialog_alert)
-                        .show();
-            }
-        };
-        if (whereClause != null)
-
-        {
-            BackendlessDataQuery dataQuery = new BackendlessDataQuery();
-            dataQuery.setWhereClause(whereClause);
-            Backendless.Persistence.of(Tour.class).find(dataQuery, callback);
-        } else
-
-        {
-            Backendless.Data.of(Tour.class).find(callback);
+    public void checkIfUserIsLoggedIn(Context context) {
+        BackendlessUser user = Backendless.UserService.CurrentUser();
+        if (user == null) {
+            Intent intent = new Intent(context, StartActivity.class);
+            context.startActivity(intent);
         }
-
-
     }
 
-
-    public void getTimeInstances(String tourId, final Context context) {
-        showDialog(context);
-        timeInstances = new ArrayList<>();
-        final AsyncCallback<BackendlessCollection<TimeInstance>> callback = new AsyncCallback<BackendlessCollection<TimeInstance>>() {
-            public void handleResponse(BackendlessCollection<TimeInstance> slots) {
-                timeInstances = slots.getCurrentPage();
-                if (dialog.isShowing()) {
-                    dialog.dismiss();
+    public int checkIfLocationExists(Location location) {
+        if (locations != null) {
+            for (int i = 0; i < locations.size(); i++) {
+                Location loc = locations.get(i);
+                if (loc.getName().equals(location.getName())) {
+                    return i;
                 }
             }
-
-            @Override
-            public void handleFault(BackendlessFault backendlessFault) {
-                new AlertDialog.Builder(context)
-                        .setTitle("Ошибка")
-                        .setMessage("Пожалуйста, попробуйте еще раз.")
-                        .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int which) {
-
-                            }
-                        })
-                        .setIcon(android.R.drawable.ic_dialog_alert)
-                        .show();
-            }
-        };
-
-        BackendlessDataQuery dataQuery = new BackendlessDataQuery();
-        dataQuery.setWhereClause("tour.objectId = '" + tourId + "'");
-        Backendless.Persistence.of(TimeInstance.class).find(dataQuery, callback);
-
+        }
+        return -1;
     }
 
+
+    public TourProposal getCurrentTourProposal() {
+        return currentTourProposal;
+    }
+
+    public void setCurrentTourProposal(TourProposal currentTourProposal) {
+        this.currentTourProposal = currentTourProposal;
+    }
+
+    public List<TourPhoto> getTourImages() {
+        return tourImages;
+    }
+
+    public void setTourImages(List<TourPhoto> tourImages) {
+        this.tourImages = tourImages;
+    }
 
     public List<Tour> getToursList() {
         return toursList;
@@ -178,6 +130,22 @@ public class DataManager {
 
     public void setTimeInstances(List<TimeInstance> timeInstances) {
         this.timeInstances = timeInstances;
+    }
+
+    public List<Category> getCategories() {
+        return categories;
+    }
+
+    public void setCategories(List<Category> categories) {
+        this.categories = categories;
+    }
+
+    public List<Location> getLocations() {
+        return locations;
+    }
+
+    public void setLocations(List<Location> locations) {
+        this.locations = locations;
     }
 }
 

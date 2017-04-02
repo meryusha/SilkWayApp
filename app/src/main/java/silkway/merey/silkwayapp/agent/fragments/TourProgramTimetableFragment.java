@@ -125,7 +125,7 @@ public class TourProgramTimetableFragment extends Fragment {
             TimeInstance slot = slots.get(position);
             viewHolder.startTimeTextView.setText(slot.getStartHour() + " : " + slot.getStartMinute());
             viewHolder.endTimeTextView.setText(slot.getEndHour() + " : " + slot.getEndMinute());
-            viewHolder.descriptionTextView.setText(slot.getDescription());
+            viewHolder.descriptionTextView.setText(slot.getDesc());
             // Log.d(TAG, apartments.get(position).getImage());
             // Glide.with(context).load(images.get(position).getImageURL()).centerCrop().into(viewHolder.categoryImageView);
             return convertView;

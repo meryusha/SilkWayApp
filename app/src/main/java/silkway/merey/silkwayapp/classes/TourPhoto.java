@@ -7,9 +7,19 @@ public class TourPhoto {
     private String objectId;
     private Tour tour;
     private String url;
-    private String description;
+    private String desc;
 
     // private
+
+    public TourPhoto() {
+
+    }
+
+    public TourPhoto(Tour tour, String url, String desc) {
+        this.tour = tour;
+        this.url = url;
+        this.desc = desc;
+    }
 
     public String getObjectId() {
         return objectId;
@@ -35,11 +45,11 @@ public class TourPhoto {
         this.url = url;
     }
 
-    public String getDescription() {
-        return description;
+    public String getDesc() {
+        return desc;
     }
 
-    public void setDescription(String description) {
-        this.description = description;
+    public void setDesc(String desc) {
+        this.desc = desc;
     }
 }

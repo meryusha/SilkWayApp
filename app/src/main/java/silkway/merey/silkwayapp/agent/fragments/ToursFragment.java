@@ -30,8 +30,9 @@ import com.backendless.persistence.QueryOptions;
 import java.util.ArrayList;
 import java.util.List;
 
+import silkway.merey.silkwayapp.DataManager;
 import silkway.merey.silkwayapp.R;
-import silkway.merey.silkwayapp.agent.activities.AddTourActivity;
+import silkway.merey.silkwayapp.agent.activities.TourCreateActivity;
 import silkway.merey.silkwayapp.agent.activities.MainActivity;
 import silkway.merey.silkwayapp.agent.adapters.CategoryAdapter;
 import silkway.merey.silkwayapp.agent.adapters.LocationAdapter;
@@ -271,7 +272,7 @@ public class ToursFragment extends Fragment {
         floatingButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(getActivity(), AddTourActivity.class);
+                Intent intent = new Intent(getActivity(), TourCreateActivity.class);
                 startActivity(intent);
             }
         });
@@ -292,6 +293,7 @@ public class ToursFragment extends Fragment {
             @Override
             public void handleResponse(BackendlessCollection<Category> response) {
                 categories = response.getCurrentPage();
+                DataManager.getInstance().setCategories(categories);
                 categorySpinner.setAdapter(new CategoryAdapter(getActivity(), android.R.layout.simple_spinner_dropdown_item, categories));
 
             }
@@ -306,6 +308,7 @@ public class ToursFragment extends Fragment {
             @Override
             public void handleResponse(BackendlessCollection<Location> response) {
                 locations = response.getCurrentPage();
+                DataManager.getInstance().setLocations(locations);
                 locationSpinner.setAdapter(new LocationAdapter(getActivity(), android.R.layout.simple_spinner_dropdown_item, locations));
             }
 

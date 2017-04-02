@@ -30,6 +30,7 @@ public class MainActivity extends AppCompatActivity implements ToursFragment.OnT
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         setDrawer();
+        DataManager.getInstance().checkIfUserIsLoggedIn(this);
     }
 
 

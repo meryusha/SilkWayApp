@@ -9,4 +9,10 @@
 
     <string name="title_activity_searchable">SearchableActivity</string>
     <string name="title_activity_agent_offer_edit">AgentOfferEditActivity</string>
+    <string name="dialogMessage">"Пожалуйста, подождите"</string>
+    <string name="dialogTitleLoadingPhoto">"Загружаю фотографию"</string>
+    <string name="dialogTitleLoadingInfo">"Загружаю информацию"</string>
+    <string name="dialogTitleSavingInfo">"Сохраняю данные"</string>
+    <string name="alertError">"Ошибка"</string>
+    <string name="alertErrorMessage">"Попробуйте позднее"</string>
 </resources>

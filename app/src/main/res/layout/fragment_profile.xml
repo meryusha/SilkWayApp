@@ -1,60 +1,66 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_margin="@dimen/fab_margin"
-    android:orientation="vertical"
+
     tools:context=".agent.fragments.ProfileFragment">
 
-    <!-- TODO: Update blank fragment layout -->
-    <de.hdodenhof.circleimageview.CircleImageView xmlns:app="http://schemas.android.com/apk/res-auto"
-        android:id="@+id/profile_image"
-        android:layout_width="96dp"
-        android:layout_height="96dp"
-        android:layout_gravity="center"
-        android:layout_marginBottom="10dp"
-        android:src="@drawable/ic_account_circle_black_24dp"
-        app:civ_border_color="#FF000000"
-        app:civ_border_width="2dp" />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
 
-    <TextView
-        android:id="@+id/userNicknameTextView"
-        style="@style/headingsTextStyle"
-        android:text="Мерей"
-        android:textAlignment="center"
-        android:textSize="18sp" />
+        <!-- TODO: Update blank fragment layout -->
+        <de.hdodenhof.circleimageview.CircleImageView xmlns:app="http://schemas.android.com/apk/res-auto"
+            android:id="@+id/profileImageView"
+            android:layout_width="96dp"
+            android:layout_height="96dp"
+            android:layout_gravity="center"
+            android:layout_marginBottom="10dp"
+            android:src="@drawable/ic_account_circle_black_24dp"
+            app:civ_border_color="#FF000000"
+            app:civ_border_width="2dp" />
 
-    <TextView
-        android:id="@+id/userRatingTextView"
-        style="@style/textStyle"
-        android:text="Рейтинг: 90%"
-        android:textAlignment="center" />
+        <TextView
+            android:id="@+id/userNameTextView"
+            style="@style/headingsTextStyle"
+            android:text="Мерей"
+            android:textAlignment="center"
+            android:textSize="18sp" />
 
-    <TextView
-        style="@style/headingsTextStyle"
-        android:text="Описание" />
+        <TextView
+            android:id="@+id/userRatingTextView"
+            style="@style/textStyle"
+            android:text="Рейтинг: 90%"
+            android:textAlignment="center" />
 
-    <TextView
-        android:id="@+id/usersDetailsTextView"
-        style="@style/textStyle" />
+        <TextView
+            style="@style/headingsTextStyle"
+            android:text="Описание" />
 
-    <TextView
-        style="@style/headingsTextStyle"
-        android:text="Дата регистрации" />
+        <TextView
+            android:id="@+id/usersDetailsTextView"
+            style="@style/textStyle" />
 
-    <TextView
-        android:id="@+id/registrartionDateTextView"
-        style="@style/textStyle"
-        android:text="" />
+        <TextView
+            style="@style/headingsTextStyle"
+            android:text="Дата регистрации" />
 
-    <TextView
-        style="@style/headingsTextStyle"
-        android:text="Контакты" />
+        <TextView
+            android:id="@+id/registrartionDateTextView"
+            style="@style/textStyle"
+            android:text="" />
 
-    <TextView
-        android:id="@+id/contactDetailsDateTextView"
-        style="@style/textStyle"
-        android:text="" />
+        <TextView
+            style="@style/headingsTextStyle"
+            android:text="Контакты" />
 
-</LinearLayout>
+        <TextView
+            android:id="@+id/contactDetailsDateTextView"
+            style="@style/textStyle"
+            android:text="" />
+
+    </LinearLayout>
+</ScrollView>

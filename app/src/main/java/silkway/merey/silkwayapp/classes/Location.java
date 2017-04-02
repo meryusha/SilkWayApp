@@ -8,6 +8,14 @@ public class Location {
     private String objectId;
     private String name;
 
+    public Location() {
+
+    }
+
+    public Location(String name) {
+        this.name = name;
+    }
+
     public String getName() {
         return name;
     }

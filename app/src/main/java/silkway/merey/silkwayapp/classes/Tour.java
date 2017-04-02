@@ -17,8 +17,8 @@ public class Tour {
     private String avatarUrl;
     private Category category;
     private int capacity;
-    private Role type;
-    private String description;
+
+    private String desc;
     private boolean isOpen;
     private Location location;
     private String requirements;
@@ -26,9 +26,21 @@ public class Tour {
     public Tour() {
     }
 
-    public Tour(String tourName, String tourDescription) {
-        this.title = tourName;
-        this.description = tourDescription;
+    public Tour(BackendlessUser author, String duration, int price, String title, String videoUrl, String season, String avatarUrl, Category category, int capacity, String desc, boolean isOpen, Location location, String requirements) {
+        this.season = season;
+        this.author = author;
+        this.duration = duration;
+        this.price = price;
+        this.title = title;
+        this.videoUrl = videoUrl;
+        this.avatarUrl = avatarUrl;
+        this.category = category;
+        this.capacity = capacity;
+
+        this.desc = desc;
+        this.isOpen = isOpen;
+        this.location = location;
+        this.requirements = requirements;
     }
 
     public String getObjectId() {
@@ -100,20 +112,13 @@ public class Tour {
         this.capacity = capacity;
     }
 
-    public Role getType() {
-        return type;
+
+    public String getDesc() {
+        return desc;
     }
 
-    public void setType(Role type) {
-        this.type = type;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
+    public void setDesc(String desc) {
+        this.desc = desc;
     }
 
     public boolean isOpen() {

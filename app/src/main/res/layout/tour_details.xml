@@ -27,6 +27,12 @@
         style="@style/textStyle"
         android:text="Расположение" />
 
+
+    <TextView
+        android:id="@+id/tourSeasonTextView"
+        style="@style/textStyle"
+        android:text="Сезон" />
+
     <TextView
         android:id="@+id/tourNumberPeopleTextView"
         style="@style/textStyle"
@@ -35,7 +41,7 @@
     <TextView
         android:id="@+id/tourDurationTextView"
         style="@style/textStyle"
-        android:text="Требования" />
+        android:text="Длительность" />
 
     <TextView
         android:id="@+id/tourRequirementsTextView"

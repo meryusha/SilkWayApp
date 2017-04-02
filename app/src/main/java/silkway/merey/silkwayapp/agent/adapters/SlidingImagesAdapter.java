@@ -69,7 +69,7 @@ public class SlidingImagesAdapter extends PagerAdapter {
             }
         });
         textView.setMovementMethod(new ScrollingMovementMethod());
-        textView.setText("" + images.get(position).getDescription());
+        textView.setText("" + images.get(position).getDesc());
         textView.setVisibility(View.INVISIBLE);
         textView.setEnabled(false);
         imageLayout.setOnClickListener(new View.OnClickListener() {
@@ -86,17 +86,16 @@ public class SlidingImagesAdapter extends PagerAdapter {
 
     private void onImageClick(View v) {
         textView = (TextView) v.findViewById(R.id.textView);
-
+        imageView = (ImageView) v.findViewById(R.id.image);
         if (textView.isEnabled()) {
-            imageView.setAlpha(255);
+            imageView.setImageAlpha(255);
             textView.setVisibility(View.INVISIBLE);
             textView.setEnabled(false);
 
         } else {
-            imageView.setAlpha(150);
+            imageView.setImageAlpha(170);
             textView.setVisibility(View.VISIBLE);
             textView.setEnabled(true);
-
         }
     }
 

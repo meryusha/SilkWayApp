@@ -39,6 +39,7 @@
             android:textAlignment="center" />
 
         <EditText
+            android:id="@+id/timeDescriptionEditText"
             style="@style/editTextStyle"
             android:layout_width="0dp"
             android:layout_height="wrap_content"

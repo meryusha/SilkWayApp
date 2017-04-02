@@ -12,6 +12,8 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+
 import java.util.List;
 
 import silkway.merey.silkwayapp.R;
@@ -57,11 +59,9 @@ public class PhotosListViewAdapter extends BaseAdapter {
         } else {
             viewHolder = (ViewHolder) convertView.getTag();
         }
-        viewHolder.imageView.setImageResource(R.drawable.nature);
-        viewHolder.textView.setText("Белорусский санаторий «Боровое» получил свое название не случайно. Он уютно расположился вдалеке от областных городов и столицы, от бесконечного движения, спешки и шума, в величественном сосновом бору, на берегу живописного озера, в которое впадает река с мелодичным, как хрустальный звон ы");
-        // viewHolder.categoryName.setText(images.get(position).getName());
-        // Log.d(TAG, apartments.get(position).getImage());
-        // Glide.with(context).load(images.get(position).getImageURL()).centerCrop().into(viewHolder.categoryImageView);
+
+        viewHolder.textView.setText(images.get(position).getDesc());
+        Glide.with(context).load(images.get(position).getUrl()).centerCrop().into(viewHolder.imageView);
         return convertView;
     }
 

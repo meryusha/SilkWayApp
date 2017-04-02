@@ -122,7 +122,7 @@ public class ToursFeedAdapter extends BaseAdapter {
             for (Tour tour : tours) {
                 if (charText.length() != 0 && tour.getTitle().toLowerCase(Locale.getDefault()).contains(charText)) {
                     toursCopy.add(tour);
-                } else if (charText.length() != 0 && tour.getDescription().toLowerCase(Locale.getDefault()).contains(charText)) {
+                } else if (charText.length() != 0 && tour.getDesc().toLowerCase(Locale.getDefault()).contains(charText)) {
                     toursCopy.add(tour);
                 }
             }

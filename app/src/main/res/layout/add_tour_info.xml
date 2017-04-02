@@ -35,25 +35,36 @@
     <EditText
         android:id="@+id/tourPriceEditText"
         style="@style/editTextStyle"
-        android:hint="Введите цену" />
+        android:hint="Введите цену"
+        android:inputType="number" />
 
     <TextView
         style="@style/textStyle"
-        android:text="Сезоны" />
+        android:text="Расположение" />
 
     <EditText
-        android:id="@+id/tourLocationTextView"
+        android:id="@+id/tourLocationEditText"
         style="@style/editTextStyle"
-        android:hint="Введите сезонность тура" />
+        android:hint="Введите расположение" />
+
+    <TextView
+        style="@style/textStyle"
+        android:text="Сезон" />
+
+    <EditText
+        android:id="@+id/tourSeasonEditText"
+        style="@style/editTextStyle"
+        android:hint="Введите сезон" />
 
     <TextView
         style="@style/textStyle"
         android:text="Количество людей" />
 
     <EditText
-        android:id="@+id/tourNumberPeopleTextView"
+        android:id="@+id/tourNumberPeopleEditText"
         style="@style/editTextStyle"
-        android:hint="Введите количество людей" />
+        android:hint="Введите количество людей"
+        android:inputType="number" />
 
     <TextView
         style="@style/textStyle"

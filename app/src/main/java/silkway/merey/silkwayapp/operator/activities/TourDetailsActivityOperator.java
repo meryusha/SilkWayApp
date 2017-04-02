@@ -8,11 +8,15 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import com.backendless.Backendless;
@@ -32,11 +36,14 @@ import silkway.merey.silkwayapp.DataManager;
 import silkway.merey.silkwayapp.R;
 import silkway.merey.silkwayapp.agent.activities.AgentOfferActivity;
 import silkway.merey.silkwayapp.agent.activities.TourEditActivity;
+import silkway.merey.silkwayapp.agent.adapters.AgentViewOfferListViewAdapter;
 import silkway.merey.silkwayapp.agent.adapters.SlidingImagesAdapter;
 import silkway.merey.silkwayapp.agent.adapters.TimetableTabsAdapter;
+import silkway.merey.silkwayapp.classes.Constants;
 import silkway.merey.silkwayapp.classes.TimeInstance;
 import silkway.merey.silkwayapp.classes.Tour;
 import silkway.merey.silkwayapp.classes.TourPhoto;
+import silkway.merey.silkwayapp.classes.TourProposal;
 
 public class TourDetailsActivityOperator extends AppCompatActivity {
     private Tour tour;
@@ -44,9 +51,12 @@ public class TourDetailsActivityOperator extends AppCompatActivity {
     private Toolbar toolbar;
     private Button toogleButtonOffers;
     private TabLayout tabLayout;
-    private final int MAX_ADDED_DAYS = 10;
+    private List<TourProposal> tourProposals = new ArrayList<>();
+    private List<TimeInstance> slots = new ArrayList<>();
     private ExpandableRelativeLayout expandableRelativeLayoutOffers;
     private ProgressDialog dialog;
+    private TimetableTabsAdapter adapter;
+    private ListView offersListView;
     private ViewPager timetableViewPager;
     private List<TourPhoto> tourImages = new ArrayList<>();
     private TextView authorNameTextView;
@@ -56,17 +66,22 @@ public class TourDetailsActivityOperator extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_tour_details_operator);
+        DataManager.getInstance().checkIfUserIsLoggedIn(this);
+        tour = DataManager.getInstance().getCurrentTour();
+        if (tour == null) {
+            finish();
+        }
         initViews();
+
 
     }
 
     private void initViews() {
-        tour = DataManager.getInstance().getCurrentTour();
+
         initAuthorInfo();
         setToolbar();
         initPhotos();
         initDetails();
-        //  initSchedule();
         initTimetable();
         //  initStatistics();
         initOffers();
@@ -94,24 +109,44 @@ public class TourDetailsActivityOperator extends AppCompatActivity {
                 toogleButtonOffers.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_keyboard_arrow_left_black_24dp, 0);
             }
         });
+        offersListView = (ListView) findViewById(R.id.offersListView);
+        offersListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                onListViewClicked(position);
+            }
+        });
+        getOffers();
     }
 
     private void initTimetable() {
-
         //arrayList
-        List<TimeInstance> slots = new ArrayList<>();
-        slots.add(new TimeInstance(11, 30, 12, 00, "Сбор"));
-        slots.add(new TimeInstance(13, 00, 14, 00, "Обед"));
-        slots.add(new TimeInstance(18, 30, 19, 00, "Отъезд"));
-        TimetableTabsAdapter adapter = new TimetableTabsAdapter(getSupportFragmentManager());
-        timetableViewPager = (ViewPager) findViewById(R.id.viewpager);
-        timetableViewPager.setAdapter(adapter);
-        timetableViewPager.setOffscreenPageLimit(MAX_ADDED_DAYS);
-        tabLayout = (TabLayout) findViewById(R.id.tabLayout);
-        tabLayout.setupWithViewPager(timetableViewPager);
-        adapter.addFragment(tabLayout, slots);
-        adapter.addFragment(tabLayout, slots);
+        final AsyncCallback<BackendlessCollection<TimeInstance>> callback = new AsyncCallback<BackendlessCollection<TimeInstance>>() {
+            public void handleResponse(BackendlessCollection<TimeInstance> response) {
 
+                slots = response.getCurrentPage();
+                //   Log.d("someERRRROR", slots.size() + "");
+                adapter = new TimetableTabsAdapter(getSupportFragmentManager());
+                timetableViewPager = (ViewPager) findViewById(R.id.viewpager);
+                timetableViewPager.setAdapter(adapter);
+                timetableViewPager.setOffscreenPageLimit(Constants.MAX_ADDED_DAYS);
+                tabLayout = (TabLayout) findViewById(R.id.tabLayout);
+                tabLayout.setupWithViewPager(timetableViewPager);
+                adapter.buildTimetable(slots, tabLayout);
+            }
+
+            @Override
+            public void handleFault(BackendlessFault backendlessFault) {
+                Log.d("someERRRROR", backendlessFault.getMessage());
+                DataManager.getInstance().showError(TourDetailsActivityOperator.this);
+
+            }
+        };
+        BackendlessDataQuery dataQuery = new BackendlessDataQuery();
+        String whereClause = "tour.objectId = '" + DataManager.getInstance().getCurrentTour().getObjectId() + "'";
+        dataQuery.setWhereClause(whereClause);
+        // showDialog(getResources().getString(R.string.dialogTitleLoadingInfo), getResources().getString(R.string.dialogMessage));
+        Backendless.Persistence.of(TimeInstance.class).find(dataQuery, callback);
     }
 
     private void initDetails() {
@@ -124,7 +159,7 @@ public class TourDetailsActivityOperator extends AppCompatActivity {
         TextView tourDurationTextView = (TextView) findViewById(R.id.tourDurationTextView);
 
         tourNameTextView.setText("" + tour.getTitle());
-        tourDescriptionTextView.setText("" + tour.getDescription());
+        tourDescriptionTextView.setText("" + tour.getDesc());
         tourLocationTextView.setText("Локация: " + tour.getLocation().getName());
         tourDurationTextView.setText("Продолжительность тура: " + tour.getDuration());
         tourRequirementsTextView.setText("Требования: " + tour.getRequirements());
@@ -133,11 +168,10 @@ public class TourDetailsActivityOperator extends AppCompatActivity {
     }
 
     private void initPhotos() {
-
-        showDialog();
         final AsyncCallback<BackendlessCollection<TourPhoto>> callback = new AsyncCallback<BackendlessCollection<TourPhoto>>() {
             public void handleResponse(BackendlessCollection<TourPhoto> response) {
                 tourImages = response.getCurrentPage();
+                DataManager.getInstance().setTourImages(tourImages);
                 if (dialog.isShowing()) {
                     dialog.dismiss();
                 }
@@ -154,12 +188,8 @@ public class TourDetailsActivityOperator extends AppCompatActivity {
         BackendlessDataQuery dataQuery = new BackendlessDataQuery();
         String whereClause = "tour.objectId = '" + DataManager.getInstance().getCurrentTour().getObjectId() + "'";
         dataQuery.setWhereClause(whereClause);
+        showDialog(getResources().getString(R.string.dialogTitleLoadingInfo), getResources().getString(R.string.dialogMessage));
         Backendless.Persistence.of(TourPhoto.class).find(dataQuery, callback);
-    }
-
-    private void onListViewClicked(int position) {
-        Intent intent = new Intent(this, AgentOfferActivity.class);
-        startActivity(intent);
     }
 
 
@@ -201,6 +231,33 @@ public class TourDetailsActivityOperator extends AppCompatActivity {
 
     }
 
+    private void getOffers() {
+        final int height = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 70, this.getResources().getDisplayMetrics());
+        final AsyncCallback<BackendlessCollection<TourProposal>> callback = new AsyncCallback<BackendlessCollection<TourProposal>>() {
+            public void handleResponse(BackendlessCollection<TourProposal> response) {
+                tourProposals = response.getCurrentPage();
+                ViewGroup.LayoutParams params = offersListView.getLayoutParams();
+                params.height = tourProposals.size() * height;
+                offersListView.setLayoutParams(params);
+                offersListView.requestLayout();
+                offersListView.setAdapter(new AgentViewOfferListViewAdapter(TourDetailsActivityOperator.this, tourProposals));
+            }
+
+            @Override
+            public void handleFault(BackendlessFault backendlessFault) {
+                Log.d("error", backendlessFault.getMessage());
+                DataManager.getInstance().showError(TourDetailsActivityOperator.this);
+
+            }
+        };
+        BackendlessDataQuery dataQuery = new BackendlessDataQuery();
+        String whereClause = "tour.objectId = '" + DataManager.getInstance().getCurrentTour().getObjectId() + "'";
+        dataQuery.setWhereClause(whereClause);
+        Backendless.Persistence.of(TourProposal.class).find(dataQuery, callback);
+
+
+    }
+
     public void onClickToogleOffers(View view) {
 
         expandableRelativeLayoutOffers.toggle();
@@ -227,10 +284,16 @@ public class TourDetailsActivityOperator extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    private void showDialog() {
+    private void onListViewClicked(int position) {
+        DataManager.getInstance().setCurrentTourProposal(tourProposals.get(position));
+        Intent intent = new Intent(this, AgentOfferActivity.class);
+        startActivity(intent);
+    }
+
+    private void showDialog(String title, String message) {
         dialog = new ProgressDialog(this);
-        dialog.setTitle("Загружаю фото");
-        dialog.setMessage("Пожалуйста, подождите");
+        dialog.setTitle(title);
+        dialog.setMessage(message);
         dialog.show();
     }
 }

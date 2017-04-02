@@ -12,8 +12,8 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import silkway.merey.silkwayapp.R;
+import silkway.merey.silkwayapp.agent.fragments.ProfileFragment;
 import silkway.merey.silkwayapp.operator.fragments.OperatorInstrumentsFragment;
-import silkway.merey.silkwayapp.operator.fragments.ProfileFragmentOperator;
 
 public class MainActivityOperator extends AppCompatActivity {
     private DrawerLayout drawerLayout;
@@ -68,7 +68,7 @@ public class MainActivityOperator extends AppCompatActivity {
         Class fragmentClass;
         switch (menuItem.getItemId()) {
             case R.id.profile:
-                fragmentClass = ProfileFragmentOperator.class;
+                fragmentClass = ProfileFragment.class;
                 break;
             case R.id.instrum:
                 fragmentClass = OperatorInstrumentsFragment.class;
