@@ -46,7 +46,25 @@
 
         <TextView
             style="@style/headingsTextStyle"
-            android:text="Дата регистрации" />
+            android:text="ИИН" />
+
+        <TextView
+            android:id="@+id/iinTextView"
+            style="@style/textStyle"
+            android:text="" />
+
+        <TextView
+            style="@style/headingsTextStyle"
+            android:text="Номер Удостоверения" />
+
+        <TextView
+            android:id="@+id/idNumberTextView"
+            style="@style/textStyle"
+            android:text="" />
+
+        <TextView
+            style="@style/headingsTextStyle"
+            android:text="Дата рrегистрации" />
 
         <TextView
             android:id="@+id/registrartionDateTextView"
@@ -58,7 +76,7 @@
             android:text="Контакты" />
 
         <TextView
-            android:id="@+id/contactDetailsDateTextView"
+            android:id="@+id/contactDetailsTextView"
             style="@style/textStyle"
             android:text="" />
 

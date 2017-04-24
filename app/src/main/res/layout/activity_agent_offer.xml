@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".agent.activities.AgentOfferActivity">
+    tools:context=".agent.activities.TourProposalActivity">
 
     <include
         layout="@layout/toolbar"
@@ -128,7 +128,7 @@
             <Button
                 android:id="@+id/acceptOfferButton"
                 style="@style/acceptRejectButton"
-                android:background="#50f06292"
+                android:background="@color/acceptButtonColor"
                 android:text="Принять" />
 
             <Button
@@ -140,7 +140,7 @@
             <Button
                 android:id="@+id/rejectOfferButton"
                 style="@style/acceptRejectButton"
-                android:background="#508bc34a"
+                android:background="@color/rejectButtonColor"
                 android:text="Отклонить" />
         </LinearLayout>
 

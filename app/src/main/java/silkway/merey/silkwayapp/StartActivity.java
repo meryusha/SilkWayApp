@@ -51,9 +51,9 @@ public class StartActivity extends AppCompatActivity {
     }
 
     private void logIn(final boolean isOperator) {
-        String username = "operator@mail";
+        String username = "operator@sample.com";
         if (!isOperator) {
-            username = "agent@mail";
+            username = "agent@sample.com";
         }
         Backendless.UserService.login(username, "12345", new AsyncCallback<BackendlessUser>() {
             public void handleResponse(BackendlessUser user) {

@@ -13,15 +13,16 @@ public class Tour {
     private String duration;
     private int price;
     private String title;
-    private String videoUrl;
+
     private String avatarUrl;
     private Category category;
     private int capacity;
-
+    private int numberProposals;
     private String desc;
     private boolean isOpen;
     private Location location;
     private String requirements;
+    private BackendlessUser operator;
 
     public Tour() {
     }
@@ -32,11 +33,9 @@ public class Tour {
         this.duration = duration;
         this.price = price;
         this.title = title;
-        this.videoUrl = videoUrl;
         this.avatarUrl = avatarUrl;
         this.category = category;
         this.capacity = capacity;
-
         this.desc = desc;
         this.isOpen = isOpen;
         this.location = location;
@@ -95,14 +94,6 @@ public class Tour {
         return title;
     }
 
-
-    public String getVideoUrl() {
-        return videoUrl;
-    }
-
-    public void setVideoUrl(String videoUrl) {
-        this.videoUrl = videoUrl;
-    }
 
     public int getCapacity() {
         return capacity;
@@ -163,6 +154,22 @@ public class Tour {
 
     public void setRequirements(String requirements) {
         this.requirements = requirements;
+    }
+
+    public int getNumberProposals() {
+        return numberProposals;
+    }
+
+    public void setNumberProposals(int numberProposals) {
+        this.numberProposals = numberProposals;
+    }
+
+    public BackendlessUser getOperator() {
+        return operator;
+    }
+
+    public void setOperator(BackendlessUser operator) {
+        this.operator = operator;
     }
 }
 

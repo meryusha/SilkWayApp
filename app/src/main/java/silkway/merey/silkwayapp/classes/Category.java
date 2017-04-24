@@ -8,6 +8,13 @@ public class Category {
     private String objectId;
     private String name;
 
+    public Category() {
+    }
+
+    public Category(String name) {
+        this.name = name;
+    }
+
     public String getObjectId() {
         return objectId;
     }

@@ -2,6 +2,7 @@ package silkway.merey.silkwayapp.agent.activities;
 
 
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
@@ -9,6 +10,7 @@ import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
@@ -20,6 +22,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.backendless.Backendless;
 import com.backendless.BackendlessUser;
@@ -45,17 +48,11 @@ public class TourEditActivity extends AppCompatActivity {
 
     //ints
     private int dayCounter = 1;
+    private int imageIndex = -1;
 
-    //buttons
-    private Button addImageButton;
-    private Button addDayButton;
-    private Button removeDayButton;
-    private Button saveTourButton;
-    private Button cancelButton;
     private BackendlessFile backendlessFile;
     //Images
     private ImageView currentImage;
-    private ImageView addTourImageView;
 
     //editTexts
     private EditText tourNameEditText;
@@ -72,15 +69,13 @@ public class TourEditActivity extends AppCompatActivity {
     private List<View> imageViews;
     private List<Boolean> imageBoolList;
 
-    private Toolbar toolbar;
-    private ViewPager timetableViewPager;
     private LinearLayout layout;
     private ProgressDialog dialog;
     private Bitmap mainBitmap;
     private TabLayout tabLayout;
     private CreateTimetableViewPagerAdapter adapter;
     private Tour tour;
-    private int imageIndex = -1;
+
     private List<TimeInstance> timeInstances;
     private BackendlessUser user;
 
@@ -108,7 +103,7 @@ public class TourEditActivity extends AppCompatActivity {
     }
 
     private void setToolbar() {
-        toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         TextView toolbarTextView = (TextView) toolbar.findViewById(R.id.toolbar_title);
         toolbarTextView.setText("Редактировать тур");
         setSupportActionBar(toolbar);
@@ -128,7 +123,7 @@ public class TourEditActivity extends AppCompatActivity {
         initMainPhoto();
 
         //if we want to add new images
-        addImageButton = (Button) findViewById(R.id.addImageButton);
+        Button addImageButton = (Button) findViewById(R.id.addImageButton);
         addImageButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -150,7 +145,7 @@ public class TourEditActivity extends AppCompatActivity {
 
     private void initMainPhoto() {
         mainBitmap = null;
-        addTourImageView = (ImageView) findViewById(R.id.addTourImageView);
+        ImageView addTourImageView = (ImageView) findViewById(R.id.addTourImageView);
         Glide.with(this).load(tour.getAvatarUrl()).centerCrop().into(addTourImageView);
         currentImage = addTourImageView;
         addTourImageView.setOnClickListener(new View.OnClickListener() {
@@ -173,10 +168,10 @@ public class TourEditActivity extends AppCompatActivity {
 
 
     private void initTimetable() {
-        addDayButton = (Button) findViewById(R.id.addButton);
-        removeDayButton = (Button) findViewById(R.id.removeButton);
+        Button addDayButton = (Button) findViewById(R.id.addButton);
+        Button removeDayButton = (Button) findViewById(R.id.removeButton);
         adapter = new CreateTimetableViewPagerAdapter(getSupportFragmentManager());
-        timetableViewPager = (ViewPager) findViewById(R.id.viewpager);
+        ViewPager timetableViewPager = (ViewPager) findViewById(R.id.viewpager);
         timetableViewPager.setAdapter(adapter);
         timetableViewPager.setOffscreenPageLimit(Constants.MAX_ADDED_DAYS);
         tabLayout = (TabLayout) findViewById(R.id.tabLayout);
@@ -233,8 +228,9 @@ public class TourEditActivity extends AppCompatActivity {
 
 
     private void initButtons() {
-        saveTourButton = (Button) findViewById(R.id.saveTourButton);
-        cancelButton = (Button) findViewById(R.id.cancelButton);
+        Button saveTourButton = (Button) findViewById(R.id.saveTourButton);
+        Button cancelButton = (Button) findViewById(R.id.cancelButton);
+        Button deleteButton = (Button) findViewById(R.id.deleteTourButton);
         saveTourButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -247,6 +243,44 @@ public class TourEditActivity extends AppCompatActivity {
                 cancel();
             }
         });
+        deleteButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                deleteTour();
+            }
+        });
+
+    }
+
+    private void deleteTour() {
+        new AlertDialog.Builder(this)
+                .setTitle("Удалить тур?")
+                .setMessage("Вы действительно хотите удалить тур?")
+                .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        Backendless.Persistence.of(Tour.class).remove(tour, new AsyncCallback<Long>() {
+                            @Override
+                            public void handleResponse(Long response) {
+                                Toast toast = Toast.makeText(getApplicationContext(), "Вы успешно удалили тур", Toast.LENGTH_SHORT);
+                                toast.show();
+                                finish();
+                            }
+
+                            @Override
+                            public void handleFault(BackendlessFault fault) {
+                                DataManager.getInstance().showError(TourEditActivity.this);
+                            }
+                        });
+                    }
+                }).setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
+
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+
+            }
+        })
+                .setIcon(android.R.drawable.ic_dialog_alert)
+                .show();
 
     }
 

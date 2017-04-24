@@ -22,8 +22,8 @@
 
             <ImageView
                 android:id="@+id/tourImageView"
-                android:layout_width="120dp"
-                android:layout_height="120dp"
+                android:layout_width="160dp"
+                android:layout_height="90dp"
                 android:layout_gravity="center"
                 android:layout_marginTop="10dp"
                 android:scaleType="centerCrop"
@@ -32,7 +32,7 @@
             <TextView
                 android:id="@+id/tourNumberViews"
                 style="@style/textStyle"
-                android:text="1308"
+                android:text=""
                 android:textAlignment="center" />
         </LinearLayout>
 
@@ -55,11 +55,30 @@
                     android:layout_weight="10"
                     android:text="Экологическая поездка на Кольсай" />
 
-                <ImageView
-                    android:layout_width="30dp"
-                    android:layout_height="30dp"
-                    android:layout_gravity="end"
-                    android:src="@drawable/ic_add_black_24dp" />
+                <RelativeLayout
+                    android:layout_width="35dp"
+                    android:layout_height="35dp">
+
+                    <ImageView
+                        android:id="@+id/tourStatusImageView"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="end"
+                        android:src="@drawable/circle_green"></ImageView>
+
+                    <TextView
+                        android:id="@+id/tourNumberOffersTextView"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:gravity="center_vertical"
+                        android:text=""
+                        android:textAlignment="center"
+                        android:textColor="@color/white"
+                        android:textSize="12sp"
+                        android:textStyle="bold" />
+                </RelativeLayout>
+
+
             </LinearLayout>
 
 

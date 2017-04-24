@@ -23,14 +23,14 @@ import silkway.merey.silkwayapp.classes.Category;
 import silkway.merey.silkwayapp.classes.Location;
 import silkway.merey.silkwayapp.classes.Tour;
 
-public class ToursFeedAdapter extends BaseAdapter {
+public class OperatorToursFeedAdapter extends BaseAdapter {
     private List<Tour> tours;
     private LayoutInflater layoutInflater;
     private Context context;
     ItemViewHolder itemViewHolder;
     private List<Tour> toursCopy = new ArrayList<>();
 
-    public ToursFeedAdapter(Context context, List<Tour> tours) {
+    public OperatorToursFeedAdapter(Context context, List<Tour> tours) {
         this.context = context;
         this.tours = tours;
         toursCopy.addAll(tours);
@@ -73,10 +73,18 @@ public class ToursFeedAdapter extends BaseAdapter {
         } else {
             itemViewHolder = (ItemViewHolder) convertView.getTag();
         }
+
         final Tour tour = toursCopy.get(position);
-        if (tour.getAuthor() != null && tour.getAuthor().getObjectId().equals(Backendless.UserService.CurrentUser().getObjectId())) {
-            itemViewHolder.tourNumberOffersTextView.setText(tour.getNumberProposals() + "");
-            itemViewHolder.tourStatusImageView.setImageResource(R.drawable.circle_red);
+        if (tour.getOperator() != null) {
+            //tour is already subscribed
+            if (tour.getOperator().getObjectId().equals(Backendless.UserService.CurrentUser().getObjectId())) {
+                // itemViewHolder.tourNumberOffersTextView.setText(tour.getNumberProposals() + "");
+                itemViewHolder.tourStatusImageView.setImageResource(R.drawable.circle_green);
+            } else {
+                itemViewHolder.tourStatusImageView.setImageResource(R.drawable.circle_blue);
+            }
+        } else {
+            itemViewHolder.tourStatusImageView.setVisibility(View.INVISIBLE);
         }
         itemViewHolder.tourImageView.setBackgroundResource(R.color.transpBlack);
         //  itemViewHolder.tourImageView.setColorFilter(Color.BLACK, PorterDuff.Mode.ADD);
@@ -177,7 +185,7 @@ public class ToursFeedAdapter extends BaseAdapter {
     public void getMyTours(BackendlessUser user) {
         toursCopy.clear();
         for (Tour tour : tours) {
-            if (tour.getAuthor() != null && tour.getAuthor().getObjectId().equals(user.getObjectId())) {
+            if (tour.getOperator() != null && tour.getOperator().getObjectId().equals(user.getObjectId())) {
                 toursCopy.add(tour);
             }
         }

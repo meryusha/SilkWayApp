@@ -5,6 +5,8 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
+import android.text.Html;
+import android.text.method.LinkMovementMethod;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -28,9 +30,6 @@ public class ProfileFragment extends Fragment {
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
-    private TextView userNameTextView;
-    private TextView userDetailsTextView;
-    private CircleImageView imageView;
     private OnFragmentInteractionListener mListener;
 
     public ProfileFragment() {
@@ -64,11 +63,19 @@ public class ProfileFragment extends Fragment {
         DataManager.getInstance().checkIfUserIsLoggedIn(getActivity());
         BackendlessUser user = Backendless.UserService.CurrentUser();
         View v = inflater.inflate(R.layout.fragment_profile, container, false);
-        userNameTextView = (TextView) v.findViewById(R.id.userNameTextView);
-        userDetailsTextView = (TextView) v.findViewById(R.id.usersDetailsTextView);
-        imageView = (CircleImageView) v.findViewById(R.id.profileImageView);
+        TextView userNameTextView = (TextView) v.findViewById(R.id.userNameTextView);
+        TextView userDetailsTextView = (TextView) v.findViewById(R.id.usersDetailsTextView);
+        TextView userIinTextView = (TextView) v.findViewById(R.id.iinTextView);
+        TextView userIdNumberTextView = (TextView) v.findViewById(R.id.idNumberTextView);
+        TextView userContactInfoTextView = (TextView) v.findViewById(R.id.contactDetailsTextView);
+        CircleImageView imageView = (CircleImageView) v.findViewById(R.id.profileImageView);
         userNameTextView.setText(user.getProperty("name").toString());
         userDetailsTextView.setText(user.getProperty("desc").toString());
+        userIinTextView.setText(user.getProperty("iin_nomer").toString());
+        userIdNumberTextView.setText(user.getProperty("udo_nomer").toString());
+        userContactInfoTextView.setClickable(true);
+        userContactInfoTextView.setMovementMethod(LinkMovementMethod.getInstance());
+        userContactInfoTextView.setText(Html.fromHtml(user.getProperty("link").toString()));
         Glide.with(getActivity()).load(user.getProperty("avatarUrl")).centerCrop().into(imageView);
         return v;
     }

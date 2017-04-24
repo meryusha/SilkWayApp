@@ -1,11 +1,9 @@
-package silkway.merey.silkwayapp.agent.fragments;
+package silkway.merey.silkwayapp.operator.fragments;
 
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
@@ -19,7 +17,6 @@ import android.widget.Button;
 import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.backendless.Backendless;
 import com.backendless.BackendlessCollection;
@@ -33,57 +30,54 @@ import java.util.List;
 
 import silkway.merey.silkwayapp.DataManager;
 import silkway.merey.silkwayapp.R;
-import silkway.merey.silkwayapp.agent.activities.MainActivity;
-import silkway.merey.silkwayapp.agent.activities.TourCreateActivity;
 import silkway.merey.silkwayapp.agent.adapters.CategoryAdapter;
 import silkway.merey.silkwayapp.agent.adapters.LocationAdapter;
-import silkway.merey.silkwayapp.agent.adapters.ToursFeedAdapter;
+import silkway.merey.silkwayapp.agent.adapters.OperatorToursFeedAdapter;
 import silkway.merey.silkwayapp.classes.Category;
 import silkway.merey.silkwayapp.classes.Location;
 import silkway.merey.silkwayapp.classes.Tour;
+import silkway.merey.silkwayapp.operator.activities.MainActivityOperator;
 
-
-public class ToursFragment extends Fragment {
-
-
+public class OperatorToursFragment extends Fragment {
+    private List<Tour> tours = new ArrayList<>();
     //buttons
     private Button sortByPriceButton;
     private Button sortByTopButton;
     private Button sortByDateButton;
-    private FloatingActionButton floatingButton;
 
-    //lists
-    private List<Tour> tours = new ArrayList<>();
-    private List<Category> categories;
-    private List<Location> locations;
-
-    //primitiv
+    private ListView listView;
+    private OperatorToursFeedAdapter adapter;
+    private TabLayout tabLayout;
+    private SearchView searchView;
+    private Spinner locationSpinner;
+    private Spinner categorySpinner;
+    private OnTourFragmentInteractionListener listener;
     private boolean topUp = true;
     private boolean priceUp = true;
     private boolean dateUp = true;
-
-    //spinners
-    private Spinner locationSpinner;
-    private Spinner categorySpinner;
-
-    private String whereClause = null;
-    private ListView listView;
-    private OnTourFragmentInteractionListener mListener;
-    private ToursFeedAdapter adapter;
-    private TabLayout tabLayout;
-    private SearchView searchView;
     private ProgressDialog dialog;
+    private List<Category> categories;
+    private List<Location> locations;
 
-    public ToursFragment() {
+
+    private static final String ARG_PARAM1 = "param1";
+    private static final String ARG_PARAM2 = "param2";
+
+    // TODO: Rename and change types of parameters
+    private String mParam1;
+    private String mParam2;
+
+
+    public OperatorToursFragment() {
         // Required empty public constructor
     }
 
 
-    // TODO: Rename and change types and number of parameters
-    public static ToursFragment newInstance() {
-        ToursFragment fragment = new ToursFragment();
+    public static OperatorToursFragment newInstance(String param1, String param2) {
+        OperatorToursFragment fragment = new OperatorToursFragment();
         Bundle args = new Bundle();
-
+        args.putString(ARG_PARAM1, param1);
+        args.putString(ARG_PARAM2, param2);
         fragment.setArguments(args);
         return fragment;
     }
@@ -92,18 +86,22 @@ public class ToursFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-
+            mParam1 = getArguments().getString(ARG_PARAM1);
+            mParam2 = getArguments().getString(ARG_PARAM2);
         }
     }
-
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View v = inflater.inflate(R.layout.fragment_agent_feed_tours, container, false);
+        // Inflate the layout for this fragment
+        View v = inflater.inflate(R.layout.fragment_operator_feed_tours, container, false);
         initViews(v);
+
+
         return v;
     }
+
 
     private void initViews(View v) {
         initListView(v);
@@ -113,6 +111,7 @@ public class ToursFragment extends Fragment {
         initSpinners(v);
         initSort(v);
     }
+
 
     private void initSort(View v) {
         sortByDateButton = (Button) v.findViewById(R.id.sortByDate);
@@ -192,7 +191,7 @@ public class ToursFragment extends Fragment {
     private void initToolbar() {
         TextView toolbarTextView = (TextView) getActivity().findViewById(R.id.toolbar).findViewById(R.id.toolbar_title);
         toolbarTextView.setText("Туры");
-        ((MainActivity) getActivity()).getSupportActionBar().setDisplayShowTitleEnabled(false);
+        ((MainActivityOperator) getActivity()).getSupportActionBar().setDisplayShowTitleEnabled(false);
     }
 
     private void initSpinners(View v) {
@@ -216,89 +215,81 @@ public class ToursFragment extends Fragment {
 
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
 
-                                              @Override
-                                              public boolean onQueryTextSubmit(String query) {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
 
-                                                  return false;
-                                              }
+                return false;
+            }
 
-                                              @Override
-                                              public boolean onQueryTextChange(String searchQuery) {
-                                                  if (adapter != null) {
-                                                      adapter.filter(searchQuery.toString().trim());
-                                                      listView.invalidate();
-                                                  }
-
-                                                  return true;
-                                              }
-                                          }
-
-        );
+            @Override
+            public boolean onQueryTextChange(String searchQuery) {
+                if (adapter != null) {
+                    adapter.filter(searchQuery.toString().trim());
+                    listView.invalidate();
+                }
+                return true;
+            }
+        });
     }
 
     private void initTabs(View v) {
         tabLayout = (TabLayout) v.findViewById(R.id.tabLayout);
         tabLayout.addTab(tabLayout.newTab().setText("Все"));
-        tabLayout.addTab(tabLayout.newTab().setText("Мои"));
-        tabLayout.addTab(tabLayout.newTab().setText("Открытые"));
+        tabLayout.addTab(tabLayout.newTab().setText("В перегововрах"));
+        tabLayout.addTab(tabLayout.newTab().setText("Подписанные"));
         tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
-            @Override
-            public void onTabSelected(TabLayout.Tab tab) {
-                int position = tab.getPosition();
-                switch (position) {
-                    case 0:
-                        if (adapter != null) {
-                            adapter.filter("");
-                        }
-                        break;
-                    case 1: //my
-                        if (adapter != null) {
-                            if (Backendless.UserService.CurrentUser() != null) {
-                                adapter.getMyTours(Backendless.UserService.CurrentUser());
-                            }
+                                               @Override
+                                               public void onTabSelected(TabLayout.Tab tab) {
+                                                   int position = tab.getPosition();
+                                                   switch (position) {
+                                                       case 0:
+                                                           //all
+                                                           if (adapter != null) {
+                                                               adapter.filter("");
+                                                           }
+                                                           break;
+                                                       case 1:
+                                                           //in process
+                                                           break;
+                                                       case 2:
+                                                           //subscribed
 
-                        }
-                        break;
-                    case 2:
-                        Toast toast = Toast.makeText(getActivity(), "Данная секция находится в разработке", Toast.LENGTH_SHORT);
-                        toast.show();
-                        break;
-                    default:
-                }
-            }
+                                                           if (adapter != null) {
+                                                               if (Backendless.UserService.CurrentUser() != null) {
+                                                                   adapter.getMyTours(Backendless.UserService.CurrentUser());
+                                                               }
+                                                           }
+                                                           break;
+                                                       default:
+                                                   }
+                                               }
 
-            @Override
-            public void onTabUnselected(TabLayout.Tab tab) {
+                                               @Override
+                                               public void onTabUnselected(TabLayout.Tab tab) {
+                                               }
 
-            }
+                                               @Override
+                                               public void onTabReselected(TabLayout.Tab tab) {
 
-            @Override
-            public void onTabReselected(TabLayout.Tab tab) {
+                                               }
+                                           }
 
-            }
-        });
+        );
     }
 
     private void initListView(View v) {
-        floatingButton = (FloatingActionButton) v.findViewById(R.id.floatingButton);
-        floatingButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(getActivity(), TourCreateActivity.class);
-                startActivity(intent);
-            }
-        });
+
         listView = (ListView) v.findViewById(R.id.listView);
         getTours(null);
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 onListViewClicked(position);
+
             }
         });
 
     }
-
 
     private void generateSpinnerArrays() {
         Backendless.Data.of(Category.class).find(new AsyncCallback<BackendlessCollection<Category>>() {
@@ -371,7 +362,7 @@ public class ToursFragment extends Fragment {
                 }
 
                 if (listView != null) {
-                    adapter = new ToursFeedAdapter(getActivity(), tours);
+                    adapter = new OperatorToursFeedAdapter(getActivity(), tours);
                     listView.setAdapter(adapter);
                 }
             }
@@ -406,29 +397,12 @@ public class ToursFragment extends Fragment {
 
     // TODO: Rename method, update argument and hook method into UI event
     public void onListViewClicked(int position) {
-        if (mListener != null) {
+        if (listener != null) {
 
-            mListener.onTourFragmentInteraction(tours.get(position));
+            listener.onTourFragmentInteraction(tours.get(position));
         }
     }
 
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-        if (context instanceof OnTourFragmentInteractionListener) {
-            mListener = (OnTourFragmentInteractionListener) context;
-        } else {
-            throw new RuntimeException(context.toString()
-                    + " must implement OnTourFragmentInteractionListener");
-        }
-
-    }
-
-    @Override
-    public void onDetach() {
-        super.onDetach();
-        mListener = null;
-    }
 
     private void showDialog(String title, String message) {
         dialog = new ProgressDialog(getActivity());
@@ -437,8 +411,27 @@ public class ToursFragment extends Fragment {
         dialog.show();
     }
 
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        if (context instanceof OnTourFragmentInteractionListener) {
+            listener = (OnTourFragmentInteractionListener) context;
+        } else {
+            throw new RuntimeException(context.toString()
+                    + " must implement OnFragmentInteractionListener");
+        }
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        listener = null;
+    }
+
     public interface OnTourFragmentInteractionListener {
         // TODO: Update argument type and name
         void onTourFragmentInteraction(Tour tour);
     }
+
 }
+

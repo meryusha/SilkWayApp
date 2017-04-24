@@ -47,7 +47,7 @@ public class MainActivity extends AppCompatActivity implements ToursFragment.OnT
         if (getSupportActionBar() != null) {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         }
-        selectDrawerItem(navigationView.getMenu().getItem(1));
+        selectDrawerItem(navigationView.getMenu().getItem(0));
     }
 
 

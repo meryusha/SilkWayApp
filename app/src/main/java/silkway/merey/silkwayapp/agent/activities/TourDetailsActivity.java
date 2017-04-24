@@ -67,8 +67,6 @@ public class TourDetailsActivity extends AppCompatActivity {
     private TimetableTabsAdapter adapter;
     private Tour tour;
     private TabLayout tabLayout;
-    private ViewPager pager;
-    private Toolbar toolbar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -138,6 +136,7 @@ public class TourDetailsActivity extends AppCompatActivity {
         final AsyncCallback<BackendlessCollection<TourProposal>> callback = new AsyncCallback<BackendlessCollection<TourProposal>>() {
             public void handleResponse(BackendlessCollection<TourProposal> response) {
                 tourProposals = response.getCurrentPage();
+                filter();
                 ViewGroup.LayoutParams params = offersListView.getLayoutParams();
                 params.height = tourProposals.size() * height;
                 offersListView.setLayoutParams(params);
@@ -158,6 +157,15 @@ public class TourDetailsActivity extends AppCompatActivity {
         Backendless.Persistence.of(TourProposal.class).find(dataQuery, callback);
 
 
+    }
+
+    private void filter() {
+        for (int i = 0; i < tourProposals.size(); i++) {
+
+            if (tourProposals.get(i).getTo() == null || !tourProposals.get(i).getTo().equals(Backendless.UserService.CurrentUser())) {
+                tourProposals.remove(i);
+            }
+        }
     }
 
     private void initStatistics() {
@@ -258,13 +266,13 @@ public class TourDetailsActivity extends AppCompatActivity {
 
     private void onListViewClicked(int position) {
         DataManager.getInstance().setCurrentTourProposal(tourProposals.get(position));
-        Intent intent = new Intent(this, AgentOfferActivity.class);
+        Intent intent = new Intent(this, TourProposalActivity.class);
         startActivity(intent);
     }
 
 
     private void setToolbar() {
-        toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         TextView toolbarTextView = (TextView) toolbar.findViewById(R.id.toolbar_title);
         toolbarTextView.setText("Тур");
         setSupportActionBar(toolbar);
@@ -275,7 +283,7 @@ public class TourDetailsActivity extends AppCompatActivity {
     }
 
     private void initViewPager() {
-        pager = (ViewPager) findViewById(R.id.pager);
+        ViewPager pager = (ViewPager) findViewById(R.id.pager);
         pager.setAdapter(new SlidingImagesAdapter(this, tourImages));
         CirclePageIndicator indicator = (CirclePageIndicator)
                 findViewById(R.id.indicator);
@@ -320,6 +328,9 @@ public class TourDetailsActivity extends AppCompatActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.main_menu, menu);
+        if (!DataManager.getInstance().getCurrentTour().getAuthor().getObjectId().equals(Backendless.UserService.CurrentUser().getObjectId())) {
+            menu.removeItem(R.id.account_settings);
+        }
         return true;
     }
 

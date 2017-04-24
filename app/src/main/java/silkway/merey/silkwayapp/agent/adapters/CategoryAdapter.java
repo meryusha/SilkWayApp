@@ -56,8 +56,10 @@ public class CategoryAdapter extends ArrayAdapter<Category> {
                                 ViewGroup parent) {
         TextView view = new TextView(context);
         view.setTextColor(Color.BLACK);
+        // view.setTextAlignment();
+        view.setGravity(Gravity.CENTER);
         view.setText(categoryList.get(position).getName());
-        view.setHeight(100);
+        view.setHeight(200);
 
         return view;
     }

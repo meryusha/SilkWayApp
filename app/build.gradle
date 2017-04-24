@@ -33,6 +33,6 @@ dependencies {
     compile 'com.github.aakira:expandable-layout:1.6.0@aar'
     compile 'de.hdodenhof:circleimageview:2.1.0'
     compile 'com.backendless:backendless:3.0.8.1'
+    compile 'com.google.android.gms:play-services-appindexing:9.8.0'
     testCompile 'junit:junit:4.12'
-    compile 'com.google.android.gms:play-services-appindexing:8.4.0'
 }

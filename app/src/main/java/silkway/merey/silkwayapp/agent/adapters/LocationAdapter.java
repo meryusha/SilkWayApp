@@ -55,8 +55,9 @@ public class LocationAdapter extends ArrayAdapter<Location> {
                                 ViewGroup parent) {
         TextView view = new TextView(context);
         view.setTextColor(Color.BLACK);
+        view.setGravity(Gravity.CENTER);
         view.setText(locations.get(position).getName());
-        view.setHeight(100);
+        view.setHeight(200);
         return view;
     }
 }

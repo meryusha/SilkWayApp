@@ -1,5 +1,6 @@
 package silkway.merey.silkwayapp.operator.activities;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
@@ -11,11 +12,13 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import silkway.merey.silkwayapp.DataManager;
 import silkway.merey.silkwayapp.R;
 import silkway.merey.silkwayapp.agent.fragments.ProfileFragment;
-import silkway.merey.silkwayapp.operator.fragments.OperatorInstrumentsFragment;
+import silkway.merey.silkwayapp.classes.Tour;
+import silkway.merey.silkwayapp.operator.fragments.OperatorToursFragment;
 
-public class MainActivityOperator extends AppCompatActivity {
+public class MainActivityOperator extends AppCompatActivity implements OperatorToursFragment.OnTourFragmentInteractionListener {
     private DrawerLayout drawerLayout;
     private Toolbar toolbar;
     private NavigationView navigationView;
@@ -43,7 +46,7 @@ public class MainActivityOperator extends AppCompatActivity {
         if (getSupportActionBar() != null) {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         }
-        selectDrawerItem(navigationView.getMenu().getItem(1));
+        selectDrawerItem(navigationView.getMenu().getItem(0));
     }
 
 
@@ -70,11 +73,11 @@ public class MainActivityOperator extends AppCompatActivity {
             case R.id.profile:
                 fragmentClass = ProfileFragment.class;
                 break;
-            case R.id.instrum:
-                fragmentClass = OperatorInstrumentsFragment.class;
+            case R.id.tours:
+                fragmentClass = OperatorToursFragment.class;
                 break;
             default:
-                fragmentClass = OperatorInstrumentsFragment.class;
+                fragmentClass = OperatorToursFragment.class;
         }
 
         try {
@@ -117,5 +120,11 @@ public class MainActivityOperator extends AppCompatActivity {
         drawerToggle.syncState();
     }
 
+    @Override
+    public void onTourFragmentInteraction(Tour tour) {
+        DataManager.getInstance().setCurrentTour(tour);
+        Intent intent = new Intent(this, TourDetailsActivityOperator.class);
+        startActivity(intent);
+    }
 }
 

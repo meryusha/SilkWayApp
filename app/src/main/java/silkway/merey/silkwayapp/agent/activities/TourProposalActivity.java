@@ -41,7 +41,7 @@ import silkway.merey.silkwayapp.classes.TourPhoto;
 import silkway.merey.silkwayapp.classes.TourProposal;
 
 
-public class AgentOfferActivity extends AppCompatActivity {
+public class TourProposalActivity extends AppCompatActivity {
     //buttons
     private Button toogleButtonPhotos;
     private Button toogleButtonTourDesc;
@@ -63,7 +63,6 @@ public class AgentOfferActivity extends AppCompatActivity {
     private ProgressDialog dialog;
     private Toolbar toolbar;
     private ListView photosListView;
-    private TabLayout tabLayout;
     private ViewPager timetableViewPager;
     private ImageView proposalAuthorImageView;
     private TourProposal tourProposal;
@@ -140,20 +139,20 @@ public class AgentOfferActivity extends AppCompatActivity {
                     dialog.dismiss();
                 }
                 photosListView = (ListView) findViewById(R.id.photosListView);
-                int height = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 180, AgentOfferActivity.this.getResources().getDisplayMetrics());
+                int height = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 180, TourProposalActivity.this.getResources().getDisplayMetrics());
 
                 photosListView = (ListView) findViewById(R.id.photosListView);
                 ViewGroup.LayoutParams params = photosListView.getLayoutParams();
                 params.height = tourImages.size() * height;
                 photosListView.setLayoutParams(params);
                 photosListView.requestLayout();
-                photosListView.setAdapter(new PhotosListViewAdapter(AgentOfferActivity.this, tourImages));
+                photosListView.setAdapter(new PhotosListViewAdapter(TourProposalActivity.this, tourImages));
             }
 
             @Override
             public void handleFault(BackendlessFault backendlessFault) {
                 Log.d("error", backendlessFault.getMessage());
-                DataManager.getInstance().showError(AgentOfferActivity.this);
+                DataManager.getInstance().showError(TourProposalActivity.this);
 
             }
         };
@@ -192,7 +191,7 @@ public class AgentOfferActivity extends AppCompatActivity {
         timetableViewPager = (ViewPager) findViewById(R.id.viewpager);
         timetableViewPager.setAdapter(adapter);
         timetableViewPager.setOffscreenPageLimit(Constants.MAX_ADDED_DAYS);
-        tabLayout = (TabLayout) findViewById(R.id.tabLayout);
+        TabLayout tabLayout = (TabLayout) findViewById(R.id.tabLayout);
         tabLayout.setupWithViewPager(timetableViewPager);
         adapter.addFragment(tabLayout, slots);
         adapter.addFragment(tabLayout, slots);
@@ -228,7 +227,7 @@ public class AgentOfferActivity extends AppCompatActivity {
         TextView tourDurationTextView = (TextView) findViewById(R.id.tourDurationTextView);
         TextView tourSeasonTextView = (TextView) findViewById(R.id.tourSeasonTextView);
 
-        tourNameTextView.setText("" + tour.getTitle());
+        tourNameTextView.setText("" + tourProposal.getTitle());
         tourDescriptionTextView.setText("" + tourProposal.getDesc());
         tourLocationTextView.setText("Локация: " + tourProposal.getLocation().getName());
         tourDurationTextView.setText("Продолжительность тура: " + tourProposal.getDuration());
@@ -247,10 +246,22 @@ public class AgentOfferActivity extends AppCompatActivity {
                 editOffer();
             }
         });
+        final Button acceptProposalButton = (Button) findViewById(R.id.acceptOfferButton);
+        acceptProposalButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                acceptProposal();
+            }
+        });
+    }
+
+    private void acceptProposal() {
+        Intent intent = new Intent(this, TermsOfUseActivity.class);
+        startActivity(intent);
     }
 
     private void editOffer() {
-        Intent intent = new Intent(this, AgentOfferEditActivity.class);
+        Intent intent = new Intent(this, TourProposalEditActivity.class);
         startActivity(intent);
     }
 

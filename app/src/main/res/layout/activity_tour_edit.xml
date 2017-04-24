@@ -73,13 +73,20 @@
                 android:id="@+id/saveTourButton"
                 style="@style/acceptRejectButton"
                 android:layout_marginTop="5dp"
-                android:background="#508bc34a"
+                android:background="@color/acceptButtonColor"
                 android:text="Сохранить тур" />
+
+            <Button
+                android:id="@+id/deleteTourButton"
+                style="@style/acceptRejectButton"
+                android:layout_marginTop="5dp"
+                android:background="@color/rejectButtonColor"
+                android:text="Удалить тур" />
 
             <Button
                 android:id="@+id/cancelButton"
                 style="@style/acceptRejectButton"
-                android:background="#50f06292"
+                android:background="@color/cancelButton"
                 android:text="Отменить" />
         </LinearLayout>
     </ScrollView>

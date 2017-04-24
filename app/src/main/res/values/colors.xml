@@ -10,4 +10,7 @@
     <color name="red">#ff3333</color>
     <color name="orange">#ffeb99</color>
     <color name="blue">#99ddff</color>
+    <color name="cancelButton">#70ffeb99</color>
+    <color name="rejectButtonColor">#50f06292</color>
+    <color name="acceptButtonColor">#508bc34a</color>
 </resources>

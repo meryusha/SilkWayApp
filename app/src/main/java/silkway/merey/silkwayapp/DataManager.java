@@ -20,6 +20,7 @@ import silkway.merey.silkwayapp.classes.TimeInstance;
 import silkway.merey.silkwayapp.classes.Tour;
 import silkway.merey.silkwayapp.classes.TourPhoto;
 import silkway.merey.silkwayapp.classes.TourProposal;
+import silkway.merey.silkwayapp.classes.TourProposalPhoto;
 
 /**
  * Created by Merey on 17.03.17.
@@ -35,6 +36,7 @@ public class DataManager {
     private ProgressDialog dialog;
     private TourProposal currentTourProposal;
     private List<TourPhoto> tourImages;
+    private List<TourProposalPhoto> currentTourProposalImages;
 
 
     public static DataManager getInstance() {
@@ -146,6 +148,14 @@ public class DataManager {
 
     public void setLocations(List<Location> locations) {
         this.locations = locations;
+    }
+
+    public List<TourProposalPhoto> getCurrentTourProposalImages() {
+        return currentTourProposalImages;
+    }
+
+    public void setCurrentTourProposalImages(List<TourProposalPhoto> currentTourProposalImages) {
+        this.currentTourProposalImages = currentTourProposalImages;
     }
 }
 

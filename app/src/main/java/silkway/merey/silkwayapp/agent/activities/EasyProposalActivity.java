@@ -1,4 +1,4 @@
-package silkway.merey.silkwayapp.operator.activities;
+package silkway.merey.silkwayapp.agent.activities;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
@@ -15,7 +15,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -24,7 +23,6 @@ import com.backendless.BackendlessCollection;
 import com.backendless.async.callback.AsyncCallback;
 import com.backendless.exceptions.BackendlessFault;
 import com.backendless.persistence.BackendlessDataQuery;
-import com.bumptech.glide.Glide;
 import com.github.aakira.expandablelayout.ExpandableLayoutListenerAdapter;
 import com.github.aakira.expandablelayout.ExpandableRelativeLayout;
 import com.viewpagerindicator.CirclePageIndicator;
@@ -34,9 +32,6 @@ import java.util.List;
 
 import silkway.merey.silkwayapp.DataManager;
 import silkway.merey.silkwayapp.R;
-import silkway.merey.silkwayapp.agent.activities.TourEditActivity;
-import silkway.merey.silkwayapp.agent.activities.TourProposalActivity;
-import silkway.merey.silkwayapp.agent.activities.TourProposalCreateActivity;
 import silkway.merey.silkwayapp.agent.adapters.AgentViewOfferListViewAdapter;
 import silkway.merey.silkwayapp.agent.adapters.SlidingImagesAdapter;
 import silkway.merey.silkwayapp.agent.adapters.TimetableTabsAdapter;
@@ -46,72 +41,98 @@ import silkway.merey.silkwayapp.classes.Tour;
 import silkway.merey.silkwayapp.classes.TourPhoto;
 import silkway.merey.silkwayapp.classes.TourProposal;
 
-public class TourDetailsActivityOperator extends AppCompatActivity {
-    //primitives
+public class EasyProposalActivity extends AppCompatActivity {
+    //Buttons
+    private Button toogleButtonStats;
+    private Button toogleButtonSched;
+    private Button toogleButtonOffers;
 
-    //lists
-    private List<TourProposal> tourProposals = new ArrayList<>();
+    //TextViews
+
+    //Lists
     private List<TourPhoto> tourImages = new ArrayList<>();
+    private List<TourProposal> tourProposals = new ArrayList<>();
     private List<TimeInstance> slots = new ArrayList<>();
 
 
-    private Tour tour;
-    private Button toogleButtonOffers;
+    //layouts
+    private ExpandableRelativeLayout expandableRelativeLayoutStats;
+    private ExpandableRelativeLayout expandableRelativeLayoutSched;
     private ExpandableRelativeLayout expandableRelativeLayoutOffers;
+
+
+    private ListView offersListView;
+    private ViewPager timetableViewPager;
     private ProgressDialog dialog;
     private TimetableTabsAdapter adapter;
-    private ListView offersListView;
+    private Tour tour;
+    private TabLayout tabLayout;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_tour_details_operator);
         DataManager.getInstance().checkIfUserIsLoggedIn(this);
-        tour = DataManager.getInstance().getCurrentTour();
-        if (tour == null) {
-            finish();
-        }
         initViews();
 
 
     }
 
     private void initViews() {
-
-        initAuthorInfo();
+        tour = DataManager.getInstance().getCurrentTour();
         setToolbar();
         initPhotos();
         initDetails();
+        initSchedule();
         initTimetable();
-        //  initStatistics();
+        initStatistics();
         initOffers();
         initButtons();
 
     }
 
+
     private void initButtons() {
-        Button subscribeButton = (Button) findViewById(R.id.subscribeTourButton);
-        subscribeButton.setOnClickListener(new View.OnClickListener() {
+        Button editOfferButton = (Button) findViewById(R.id.makeOfferButton);
+        editOfferButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                onSubscribeButtonClick();
+                editOffer();
+            }
+        });
+        final Button acceptProposalButton = (Button) findViewById(R.id.acceptOfferButton);
+        acceptProposalButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                acceptProposal();
             }
         });
     }
 
-    private void onSubscribeButtonClick() {
-        //   TourProposal tourProposal = new TourProposal(tour, Backendless.UserService.CurrentUser(), tour.getAuthor(), tour.getSeason(), tour.getDuration(), tour.getPrice(), tour.getTitle(), tour.getAvatarUrl(), tour.getCategory(), tour.getCapacity(), tour.getDesc(), tour.getLocation(), tour.getRequirements());
-        //   DataManager.getInstance().setCurrentTourProposal(tourProposal);
-        Intent intent = new Intent(this, TourProposalCreateActivity.class);
+    private void acceptProposal() {
+        Intent intent = new Intent(this, TermsOfUseActivity.class);
         startActivity(intent);
-
     }
 
-    private void initAuthorInfo() {
-        ImageView authorImageView = (ImageView) findViewById(R.id.profile_image);
-        TextView authorNameTextView = (TextView) findViewById(R.id.profileName);
-        Glide.with(this).load(tour.getAuthor().getProperty("avatarUrl")).centerCrop().into(authorImageView);
-        authorNameTextView.setText("" + tour.getAuthor().getProperty("name"));
+    private void editOffer() {
+        Intent intent = new Intent(this, EasyProposalCreateActivity.class);
+        startActivity(intent);
+    }
+
+    private void initSchedule() {
+        toogleButtonSched = (Button) findViewById(R.id.toogleButtonSched);
+        expandableRelativeLayoutSched = (ExpandableRelativeLayout) findViewById(R.id.expandableLayoutSchedule);
+        expandableRelativeLayoutSched.setListener(new ExpandableLayoutListenerAdapter() {
+            @Override
+            public void onPreOpen() {
+                toogleButtonSched.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_keyboard_arrow_down_black_24dp, 0);
+            }
+
+            @Override
+            public void onPreClose() {
+                toogleButtonSched.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_keyboard_arrow_left_black_24dp, 0);
+            }
+        });
     }
 
     private void initOffers() {
@@ -136,9 +157,65 @@ public class TourDetailsActivityOperator extends AppCompatActivity {
             }
         });
         getOffers();
+
+    }
+
+    private void getOffers() {
+        final int height = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 70, this.getResources().getDisplayMetrics());
+        final AsyncCallback<BackendlessCollection<TourProposal>> callback = new AsyncCallback<BackendlessCollection<TourProposal>>() {
+            public void handleResponse(BackendlessCollection<TourProposal> response) {
+                tourProposals = response.getCurrentPage();
+                filter();
+                ViewGroup.LayoutParams params = offersListView.getLayoutParams();
+                params.height = tourProposals.size() * height;
+                offersListView.setLayoutParams(params);
+                offersListView.requestLayout();
+                offersListView.setAdapter(new AgentViewOfferListViewAdapter(EasyProposalActivity.this, tourProposals));
+            }
+
+            @Override
+            public void handleFault(BackendlessFault backendlessFault) {
+                Log.d("error", backendlessFault.getMessage());
+                DataManager.getInstance().showError(EasyProposalActivity.this);
+
+            }
+        };
+        BackendlessDataQuery dataQuery = new BackendlessDataQuery();
+        String whereClause = "tour.objectId = '" + DataManager.getInstance().getCurrentTour().getObjectId() + "'";
+        dataQuery.setWhereClause(whereClause);
+        Backendless.Persistence.of(TourProposal.class).find(dataQuery, callback);
+
+
+    }
+
+    private void filter() {
+        for (int i = 0; i < tourProposals.size(); i++) {
+
+            if (tourProposals.get(i).getTo() == null || !tourProposals.get(i).getTo().equals(Backendless.UserService.CurrentUser())) {
+                tourProposals.remove(i);
+            }
+        }
+    }
+
+    private void initStatistics() {
+        toogleButtonStats = (Button) findViewById(R.id.toogleButtonStats);
+        expandableRelativeLayoutStats = (ExpandableRelativeLayout) findViewById(R.id.expandableLayoutStatistics);
+
+        expandableRelativeLayoutStats.setListener(new ExpandableLayoutListenerAdapter() {
+            @Override
+            public void onPreOpen() {
+                toogleButtonStats.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_keyboard_arrow_down_black_24dp, 0);
+            }
+
+            @Override
+            public void onPreClose() {
+                toogleButtonStats.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_keyboard_arrow_left_black_24dp, 0);
+            }
+        });
     }
 
     private void initTimetable() {
+
         //arrayList
         final AsyncCallback<BackendlessCollection<TimeInstance>> callback = new AsyncCallback<BackendlessCollection<TimeInstance>>() {
             public void handleResponse(BackendlessCollection<TimeInstance> response) {
@@ -146,10 +223,10 @@ public class TourDetailsActivityOperator extends AppCompatActivity {
                 slots = response.getCurrentPage();
                 //   Log.d("someERRRROR", slots.size() + "");
                 adapter = new TimetableTabsAdapter(getSupportFragmentManager());
-                ViewPager timetableViewPager = (ViewPager) findViewById(R.id.viewpager);
+                timetableViewPager = (ViewPager) findViewById(R.id.viewpager);
                 timetableViewPager.setAdapter(adapter);
                 timetableViewPager.setOffscreenPageLimit(Constants.MAX_ADDED_DAYS);
-                TabLayout tabLayout = (TabLayout) findViewById(R.id.tabLayout);
+                tabLayout = (TabLayout) findViewById(R.id.tabLayout);
                 tabLayout.setupWithViewPager(timetableViewPager);
                 adapter.buildTimetable(slots, tabLayout);
             }
@@ -157,7 +234,7 @@ public class TourDetailsActivityOperator extends AppCompatActivity {
             @Override
             public void handleFault(BackendlessFault backendlessFault) {
                 Log.d("someERRRROR", backendlessFault.getMessage());
-                DataManager.getInstance().showError(TourDetailsActivityOperator.this);
+                DataManager.getInstance().showError(EasyProposalActivity.this);
 
             }
         };
@@ -166,6 +243,8 @@ public class TourDetailsActivityOperator extends AppCompatActivity {
         dataQuery.setWhereClause(whereClause);
         // showDialog(getResources().getString(R.string.dialogTitleLoadingInfo), getResources().getString(R.string.dialogMessage));
         Backendless.Persistence.of(TimeInstance.class).find(dataQuery, callback);
+
+
     }
 
     private void initDetails() {
@@ -176,6 +255,7 @@ public class TourDetailsActivityOperator extends AppCompatActivity {
         TextView tourPriceTextView = (TextView) findViewById(R.id.tourPriceTextView);
         TextView tourRequirementsTextView = (TextView) findViewById(R.id.tourRequirementsTextView);
         TextView tourDurationTextView = (TextView) findViewById(R.id.tourDurationTextView);
+        TextView tourSeasonTextView = (TextView) findViewById(R.id.tourSeasonTextView);
 
         tourNameTextView.setText("" + tour.getTitle());
         tourDescriptionTextView.setText("" + tour.getDesc());
@@ -183,6 +263,7 @@ public class TourDetailsActivityOperator extends AppCompatActivity {
         tourDurationTextView.setText("Продолжительность тура: " + tour.getDuration());
         tourRequirementsTextView.setText("Требования: " + tour.getRequirements());
         tourPriceTextView.setText("Цена: " + tour.getPrice());
+        tourSeasonTextView.setText("Сезон: " + tour.getSeason());
         tourNumberPeopleTextView.setText("Количество участников: " + tour.getCapacity());
     }
 
@@ -201,6 +282,7 @@ public class TourDetailsActivityOperator extends AppCompatActivity {
             @Override
             public void handleFault(BackendlessFault backendlessFault) {
                 Log.d("error", backendlessFault.getMessage());
+                DataManager.getInstance().showError(EasyProposalActivity.this);
 
             }
         };
@@ -209,6 +291,12 @@ public class TourDetailsActivityOperator extends AppCompatActivity {
         dataQuery.setWhereClause(whereClause);
         showDialog(getResources().getString(R.string.dialogTitleLoadingInfo), getResources().getString(R.string.dialogMessage));
         Backendless.Persistence.of(TourPhoto.class).find(dataQuery, callback);
+    }
+
+    private void onListViewClicked(int position) {
+        DataManager.getInstance().setCurrentTourProposal(tourProposals.get(position));
+        Intent intent = new Intent(this, TourProposalActivity.class);
+        startActivity(intent);
     }
 
 
@@ -250,41 +338,28 @@ public class TourDetailsActivityOperator extends AppCompatActivity {
 
     }
 
-    private void getOffers() {
-        final int height = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 70, this.getResources().getDisplayMetrics());
-        final AsyncCallback<BackendlessCollection<TourProposal>> callback = new AsyncCallback<BackendlessCollection<TourProposal>>() {
-            public void handleResponse(BackendlessCollection<TourProposal> response) {
-                tourProposals = response.getCurrentPage();
-                ViewGroup.LayoutParams params = offersListView.getLayoutParams();
-                params.height = tourProposals.size() * height;
-                offersListView.setLayoutParams(params);
-                offersListView.requestLayout();
-                offersListView.setAdapter(new AgentViewOfferListViewAdapter(TourDetailsActivityOperator.this, tourProposals));
-            }
+    public void onClickToogleStats(View view) {
+        expandableRelativeLayoutStats.toggle();
+    }
 
-            @Override
-            public void handleFault(BackendlessFault backendlessFault) {
-                Log.d("error", backendlessFault.getMessage());
-                DataManager.getInstance().showError(TourDetailsActivityOperator.this);
+    public void onClickToogleSched(View view) {
 
-            }
-        };
-        BackendlessDataQuery dataQuery = new BackendlessDataQuery();
-        String whereClause = "tour.objectId = '" + DataManager.getInstance().getCurrentTour().getObjectId() + "'";
-        dataQuery.setWhereClause(whereClause);
-        Backendless.Persistence.of(TourProposal.class).find(dataQuery, callback);
-
-
+        expandableRelativeLayoutSched.toggle();
     }
 
     public void onClickToogleOffers(View view) {
 
         expandableRelativeLayoutOffers.toggle();
+
+
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.main_menu, menu);
+        if (!DataManager.getInstance().getCurrentTour().getAuthor().getObjectId().equals(Backendless.UserService.CurrentUser().getObjectId())) {
+            menu.removeItem(R.id.account_settings);
+        }
         return true;
     }
 
@@ -295,18 +370,12 @@ public class TourDetailsActivityOperator extends AppCompatActivity {
                 finish();
                 break;
             case R.id.account_settings:
-                Intent intent = new Intent(this, TourEditActivity.class);
+                Intent intent = new Intent(this, EasyProposalActivity.class);
                 startActivity(intent);
                 break;
 
         }
         return super.onOptionsItemSelected(item);
-    }
-
-    private void onListViewClicked(int position) {
-        DataManager.getInstance().setCurrentTourProposal(tourProposals.get(position));
-        Intent intent = new Intent(this, TourProposalActivity.class);
-        startActivity(intent);
     }
 
     private void showDialog(String title, String message) {
