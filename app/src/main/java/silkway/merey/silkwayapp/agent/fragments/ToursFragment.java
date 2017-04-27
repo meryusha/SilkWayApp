@@ -50,7 +50,6 @@ public class ToursFragment extends Fragment {
     private Button sortByPriceButton;
     private Button sortByTopButton;
     private Button sortByDateButton;
-    private FloatingActionButton floatingButton;
 
     //lists
     private List<Tour> tours = new ArrayList<>();
@@ -280,7 +279,7 @@ public class ToursFragment extends Fragment {
     }
 
     private void initListView(View v) {
-        floatingButton = (FloatingActionButton) v.findViewById(R.id.floatingButton);
+        FloatingActionButton floatingButton = (FloatingActionButton) v.findViewById(R.id.floatingButton);
         floatingButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -305,7 +304,7 @@ public class ToursFragment extends Fragment {
             @Override
             public void handleResponse(BackendlessCollection<Category> response) {
                 categories = response.getCurrentPage();
-                categories.add(0, new Category("Все"));
+                categories.add(0, new Category("Вид туризма"));
                 DataManager.getInstance().setCategories(categories);
                 categorySpinner.setAdapter(new CategoryAdapter(getActivity(), android.R.layout.simple_spinner_dropdown_item, categories));
                 categorySpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -334,7 +333,7 @@ public class ToursFragment extends Fragment {
             @Override
             public void handleResponse(BackendlessCollection<Location> response) {
                 locations = response.getCurrentPage();
-                locations.add(0, new Location("Все"));
+                locations.add(0, new Location("Регион"));
                 DataManager.getInstance().setLocations(locations);
                 locationSpinner.setAdapter(new LocationAdapter(getActivity(), android.R.layout.simple_spinner_dropdown_item, locations));
                 locationSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {

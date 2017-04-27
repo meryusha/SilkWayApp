@@ -3,7 +3,9 @@ package silkway.merey.silkwayapp.operator.fragments;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
@@ -30,6 +32,7 @@ import java.util.List;
 
 import silkway.merey.silkwayapp.DataManager;
 import silkway.merey.silkwayapp.R;
+import silkway.merey.silkwayapp.agent.activities.TourCreateActivity;
 import silkway.merey.silkwayapp.agent.adapters.CategoryAdapter;
 import silkway.merey.silkwayapp.agent.adapters.LocationAdapter;
 import silkway.merey.silkwayapp.agent.adapters.OperatorToursFeedAdapter;
@@ -278,7 +281,14 @@ public class OperatorToursFragment extends Fragment {
     }
 
     private void initListView(View v) {
-
+        FloatingActionButton floatingButton = (FloatingActionButton) v.findViewById(R.id.floatingButton);
+        floatingButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getActivity(), TourCreateActivity.class);
+                startActivity(intent);
+            }
+        });
         listView = (ListView) v.findViewById(R.id.listView);
         getTours(null);
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -296,7 +306,7 @@ public class OperatorToursFragment extends Fragment {
             @Override
             public void handleResponse(BackendlessCollection<Category> response) {
                 categories = response.getCurrentPage();
-                categories.add(0, new Category("Все"));
+                categories.add(0, new Category("Вид туризма"));
                 DataManager.getInstance().setCategories(categories);
                 categorySpinner.setAdapter(new CategoryAdapter(getActivity(), android.R.layout.simple_spinner_dropdown_item, categories));
                 categorySpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -325,7 +335,7 @@ public class OperatorToursFragment extends Fragment {
             @Override
             public void handleResponse(BackendlessCollection<Location> response) {
                 locations = response.getCurrentPage();
-                locations.add(0, new Location("Все"));
+                locations.add(0, new Location("Регион"));
                 DataManager.getInstance().setLocations(locations);
                 locationSpinner.setAdapter(new LocationAdapter(getActivity(), android.R.layout.simple_spinner_dropdown_item, locations));
                 locationSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
